@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class View {
@@ -33,6 +34,33 @@ public class View {
     public void printErrorMessage(String errorMessage){
         System.out.println("Error: " + errorMessage);
     }
+
+    public void printList(ArrayList<Object> list){
+        for (Object listItem : list) {
+            System.out.println(listItem.toString());
+        }
+    }
+
+    public <T extends HasDescription> T showMenuAndGetChoice(T[] menuItems) {
+        System.out.println("Make a choice.");
+        for (int i = 0; i < menuItems.length; i++) {
+            System.out.println((i + 1) + ". " + menuItems[i].getDescription());
+        }
+        int menuChoice = -1;
+        Scanner scan = new Scanner(System.in);
+        do {
+            try {
+                menuChoice = Integer.parseInt(scan.nextLine());
+                return menuItems[menuChoice - 1];
+            } catch (Exception e) {
+                printErrorMessage("Invalid choice, try again.");
+            }
+        } while (menuChoice != (menuItems.length - 1));
+        return null;
+    }
+
+
+/*
 
     public LoginMenuItem showLoginGetChoice() {
         System.out.println("Welcome to the Store.\nPlease make a choice:");
@@ -88,25 +116,31 @@ public class View {
         int choiceIndex = scanner.nextInt();
         return HandleInventoryMenuItem.values()[choiceIndex - 1];
     }
+*/
 
 
 
 
 
 
-    public enum LoginMenuItem {
+    public enum LoginMenuItem implements HasDescription {
         LOGIN("Log in"),
         CREATE_CUSTOMER_ACCOUNT("Create new account"),
         QUIT("Quit");
 
-        public String menuItemString;
+        private String menuItemString;
 
         LoginMenuItem(String menuItemString) {
             this.menuItemString = menuItemString;
         }
+
+        @Override
+        public String getDescription() {
+            return menuItemString;
+        }
     }
 
-    public enum CustomerMenuItem {
+    public enum CustomerMenuItem implements HasDescription {
         ITEMS_BY_NAME("Show items by name"),
         ITEMS_BY_PRICE("Show items by price"),
         ADD_ITEM_TO_CART("Add item to cart"),
@@ -118,20 +152,31 @@ public class View {
         CustomerMenuItem(String menuItemString) {
             this.menuItemString = menuItemString;
         }
+
+        @Override
+        public String getDescription() {
+            return menuItemString;
+        }
     }
 
-    public enum EmployeeMenuItem{
+    public enum EmployeeMenuItem implements HasDescription {
         HANDLE_ACCOUNTS("Handle user accounts"),
         HANDLE_INVENTORY("Handle inventory"),
         LOGOUT("Log out");
 
-        public String menuItemString;
+        private String menuItemString;
+
         EmployeeMenuItem(String menuItemString) {
             this.menuItemString = menuItemString;
         }
+
+        @Override
+        public String getDescription() {
+            return menuItemString;
+        }
     }
 
-    public enum HandleAccountsMenuItem {
+    public enum HandleAccountsMenuItem implements HasDescription {
         ADD_EMPLOYEE("Add new employee account"),
         DELETE_EMPLOYEE_ACCOUNT("Delete employee account"),
         PRINT_EMPLOYEE_ARRAY("Display employees"),
@@ -143,13 +188,19 @@ public class View {
         READ_USERS_FROM_FILE("Read users from file"),
         RETURN("Return to menu");
 
-        public String menuItemString;
+        private String menuItemString;
         HandleAccountsMenuItem(String menuItemString){
             this.menuItemString = menuItemString;
         }
+
+
+        @Override
+        public String getDescription() {
+            return menuItemString;
+        }
     }
 
-    public enum HandleInventoryMenuItem{
+    public enum HandleInventoryMenuItem implements HasDescription{
         ADD_ITEM("Add new item for sale"),
         INCREASE_ITEM_STOCK("Increase item stock"),
         VIEW_ITEMS_BY_NAME("Display item in alphabetical order"),
@@ -159,10 +210,15 @@ public class View {
         READ_ITEMS_FROM_FILE("Read inventory from file"),
         RETURN("Return to menu");
 
+        private String menuItemString;
 
-        public String menuItemString;
         HandleInventoryMenuItem(String menuItemString){
             this.menuItemString = menuItemString;
+        }
+
+        @Override
+        public String getDescription() {
+            return menuItemString;
         }
     }
 

@@ -23,7 +23,7 @@ public class Shop {
     public void loginMenu() {
         View.LoginMenuItem menuChoice = null;
         do {
-            menuChoice = view.showLoginGetChoice();
+            menuChoice = view.showMenuAndGetChoice(View.LoginMenuItem.values());
             switch (menuChoice) {
                 case LOGIN:
                     logIn();
@@ -44,7 +44,7 @@ public class Shop {
     public void customerMenu() {
         View.CustomerMenuItem menuChoice = null;
         do {
-            menuChoice = view.showCustomerMenuGetChoice();
+            menuChoice = view.showMenuAndGetChoice(View.CustomerMenuItem.values());
             switch (menuChoice) {
                 case ITEMS_BY_NAME:
                     Collections.sort(inventory, new Item.SortAlphabetically());
@@ -71,7 +71,7 @@ public class Shop {
     public void employeeMenu() {
         View.EmployeeMenuItem menuChoice = null;
         while (menuChoice != View.EmployeeMenuItem.LOGOUT) {
-            menuChoice = view.showEmployeeMenuGetChoice();
+            menuChoice = view.showMenuAndGetChoice(View.EmployeeMenuItem.values());
             switch (menuChoice) {
                 case HANDLE_ACCOUNTS:
                     handleAccountMenu();
@@ -93,7 +93,7 @@ public class Shop {
     public void handleAccountMenu() {
         View.HandleAccountsMenuItem menuChoice = null;
         while (menuChoice != View.HandleAccountsMenuItem.RETURN) {
-            menuChoice = view.showHandleAccountsMenuGetChoice();
+            menuChoice = view.showMenuAndGetChoice(View.HandleAccountsMenuItem.values());
             switch (menuChoice) {
                 case ADD_EMPLOYEE:
                     createEmployeeAccount();
@@ -134,7 +134,7 @@ public class Shop {
     public void handleInventoryMenu() {
         View.HandleInventoryMenuItem menuChoice = null;
         while (menuChoice != View.HandleInventoryMenuItem.RETURN) {
-            menuChoice = view.showHandleInventoryMenuGetChoice();
+            menuChoice = view.showMenuAndGetChoice(View.HandleInventoryMenuItem.values());
             switch (menuChoice) {
                 case ADD_ITEM:
                     addInventoryItem();
@@ -167,8 +167,8 @@ public class Shop {
     public void logIn() {
         view.printLine("Enter login");
         String login = scan.nextLine();
-        boolean found = false; // needs to be used, if !found can't log in
-        // TODO
+        boolean found = false;
+        // TODO found needs to be used, if !found can't log in
         int indexOfFound = -1;
         for (int i = 0; i < users.size(); i++) {
             if (login.equals(users.get(i).getLogin())) {
