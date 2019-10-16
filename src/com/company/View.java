@@ -47,7 +47,6 @@ public class View {
             System.out.println((i + 1) + ". " + menuItems[i].getDescription());
         }
         int menuChoice = -1;
-       // Scanner scan = new Scanner(System.in);
         do {
             try {
                 menuChoice = Integer.parseInt(scanner.nextLine());

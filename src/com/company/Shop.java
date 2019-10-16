@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.function.ToDoubleBiFunction;
 
 public class Shop {
-  //  Scanner scan = new Scanner(System.in);
+    //  Scanner scan = new Scanner(System.in);
     //  ArrayList<Customer> customers = new ArrayList<>();
     //  ArrayList<Employee> employees = new ArrayList<>();
     View view = View.getInstance();
@@ -35,7 +35,7 @@ public class Shop {
                     System.exit(0);
                 default:
                     // TODO
-                    System.out.println("Choose a valid alternative");
+                    view.printErrorMessage("Choose a valid alternative");
                     break;
             }
         } while (menuChoice != View.LoginMenuItem.QUIT);
@@ -166,25 +166,30 @@ public class Shop {
 
     public void logIn() {
         view.printLine("Enter login");
-        String login = view.readString();
-        boolean found = false;
-        // TODO found needs to be used, if !found can't log in
-        int indexOfFound = -1;
-        for (int i = 0; i < users.size(); i++) {
-            if (login.equals(users.get(i).getLogin())) {
-                found = true;
-                indexOfFound = i;
+        boolean userFound = false;
+        int indexOfFoundUser = -1;
+        while (!userFound) {
+            String login = view.readString();
+            for (int i = 0; i < users.size(); i++) {
+                if (login.equals(users.get(i).getLogin())) {
+                    userFound = true;
+                    indexOfFoundUser = i;
+                }
+            }
+            if (!userFound) {
+                view.printErrorMessage("User not found");
+              //  return;
             }
         }
         view.printLine("Enter password");
         String password = view.readString();
-        if (password.equals(users.get(indexOfFound).getPassword())
-                && users.get(indexOfFound).getUserType().equals(User.UserType.CUSTOMER)) {
-            loggedInCustomer = (Customer) users.get(indexOfFound);
+        if (password.equals(users.get(indexOfFoundUser).getPassword())
+                && users.get(indexOfFoundUser).getUserType().equals(User.UserType.CUSTOMER)) {
+            loggedInCustomer = (Customer) users.get(indexOfFoundUser);
             customerMenu();
-        } else if (password.equals(users.get(indexOfFound).getPassword())
-                && users.get(indexOfFound).getUserType().equals(User.UserType.EMPLOYEE)) {
-            loggedInEmployee = (Employee) users.get(indexOfFound);
+        } else if (password.equals(users.get(indexOfFoundUser).getPassword())
+                && users.get(indexOfFoundUser).getUserType().equals(User.UserType.EMPLOYEE)) {
+            loggedInEmployee = (Employee) users.get(indexOfFoundUser);
             employeeMenu();
         } else {
             view.printErrorMessage("Wrong password");
@@ -199,9 +204,11 @@ public class Shop {
             view.printLine("Enter name");
             name = view.readString();
             isName = InputSanitizers.isAlphabet(name);
+            //TODO first name; last name?
         } while (!isName);
         view.printLine("Enter login");
         boolean loginTaken = false;
+        //TODO clean up do while? IntelliJ throws errors
         do {
             login = view.readString();
             for (User user : users) {
@@ -221,7 +228,7 @@ public class Shop {
         String login;
         view.printLine("Enter name");
         String name = view.readString();
-        System.out.println("Enter login");
+        view.printLine("Enter login");
         boolean loginTaken = false;
         do {
             login = view.readString();
@@ -293,12 +300,8 @@ public class Shop {
 
     public void printInventory() {
         for (Item item : inventory) {
-            System.out.println(item);
+            view.printLine(item.toString());
         }
-    }
-
-    public void nukeInventory() {
-        inventory.clear();
     }
 
     public void addItemToCart() { // needs method to check for amount in cart vs amount in stock
@@ -323,6 +326,10 @@ public class Shop {
         int amount = InputSanitizers.convertToInt(view.readString());
         //TODO no negative amounts/check cart
         loggedInCustomer.addItemToCart(itemName, itemPrice, amount);
+    }
+
+    public void nukeInventory() {
+        inventory.clear();
     }
 
     public void test() {
