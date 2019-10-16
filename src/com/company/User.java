@@ -24,6 +24,12 @@ public abstract class User implements Comparable<User>{
         return password;
     }
 
+    public boolean isCorrectPassword(String string){
+        if (password.equals(string)){
+            return true;
+        } else return false;
+    }
+
     public UserType getUserType(){
         return userType;
     }
@@ -35,7 +41,7 @@ public abstract class User implements Comparable<User>{
 
     @Override
     public String toString() {
-       return String.format("10%s: %10s: %10s", userType, name, login);
+       return String.format("%10s: %10s: %10s", userType, name, login);
         // return userType + ": " + name + " " + login;
     }
 

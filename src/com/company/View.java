@@ -35,7 +35,7 @@ public class View {
         System.out.println("Error: " + errorMessage);
     }
 
-    public void printList(ArrayList<Object> list){
+    public <E> void printList(ArrayList<E> list){ //TODO fix (fixed?)
         for (Object listItem : list) {
             System.out.println(listItem.toString());
         }
@@ -57,68 +57,6 @@ public class View {
         } while (menuChoice != (menuItems.length - 1));
         return null;
     }
-
-
-/*
-
-    public LoginMenuItem showLoginGetChoice() {
-        System.out.println("Welcome to the Store.\nPlease make a choice:");
-        int i = 1;
-        for (LoginMenuItem menuItem : LoginMenuItem.values()) {
-            System.out.println(i + " " + menuItem.menuItemString);
-            i++;
-        }
-        int choiceIndex = scanner.nextInt();
-        return LoginMenuItem.values()[choiceIndex - 1];
-    }
-
-    public CustomerMenuItem showCustomerMenuGetChoice() {
-        System.out.println();
-        int i = 1;
-        for (CustomerMenuItem menuItem : CustomerMenuItem.values()) {
-            System.out.println(i + " " + menuItem.menuItemString);
-            i++;
-        }
-        int choiceIndex = scanner.nextInt();
-        return CustomerMenuItem.values()[choiceIndex - 1];
-    }
-
-    public EmployeeMenuItem showEmployeeMenuGetChoice() {
-        System.out.println();
-        int i = 1;
-        for (EmployeeMenuItem menuItem : EmployeeMenuItem.values()) {
-            System.out.println(i + " " + menuItem.menuItemString);
-            i++;
-        }
-        int choiceIndex = scanner.nextInt();
-        return EmployeeMenuItem.values()[choiceIndex - 1];
-    }
-
-    public HandleAccountsMenuItem showHandleAccountsMenuGetChoice() {
-        System.out.println();
-        int i = 1;
-        for (HandleAccountsMenuItem menuItem : HandleAccountsMenuItem.values()) {
-            System.out.println(i + " " + menuItem.menuItemString);
-            i++;
-        }
-        int choiceIndex = scanner.nextInt();
-        return HandleAccountsMenuItem.values()[choiceIndex - 1];
-    }
-
-    public HandleInventoryMenuItem showHandleInventoryMenuGetChoice() {
-        System.out.println();
-        int i = 1;
-        for (HandleInventoryMenuItem menuItem : HandleInventoryMenuItem.values()) {
-            System.out.println(i + " " + menuItem.menuItemString);
-            i++;
-        }
-        int choiceIndex = scanner.nextInt();
-        return HandleInventoryMenuItem.values()[choiceIndex - 1];
-    }
-*/
-
-
-
 
 
 
@@ -145,6 +83,7 @@ public class View {
         ADD_ITEM_TO_CART("Add item to cart"),
         SHOW_CART("Show Cart"),
         LOGOUT("Log out");
+        //TODO add money, check out
 
         public String menuItemString;
 

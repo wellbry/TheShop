@@ -34,14 +34,7 @@ public class Item implements Serializable {
 
     public String toString() {
         return String.format("%20s %6d:- %5d pieces", name, price, amount);
-       // return name + ", " + price +":- " + amount + " pieces";
     }
-  //  |%20d|
-
-  /*  public int compareTo(Goods otherGoods) {
-       // return this.price - otherGoods.price;
-        return this.name.compareToIgnoreCase(otherGoods.name);
-    } */
 
     static class SortAlphabetically implements Comparator<Item> {
         public int compare(Item a, Item b) {

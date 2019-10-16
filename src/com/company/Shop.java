@@ -10,6 +10,8 @@ public class Shop {
     //  Scanner scan = new Scanner(System.in);
     //  ArrayList<Customer> customers = new ArrayList<>();
     //  ArrayList<Employee> employees = new ArrayList<>();
+    //TODO replace all getPassword with isCorrectPassword
+
     View view = View.getInstance();
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Item> inventory = new ArrayList<>();
@@ -48,11 +50,11 @@ public class Shop {
             switch (menuChoice) {
                 case ITEMS_BY_NAME:
                     Collections.sort(inventory, new Item.SortAlphabetically());
-                    printInventory();
+                    view.printList(inventory);
                     break;
                 case ITEMS_BY_PRICE:
                     Collections.sort(inventory, new Item.SortByPrice());
-                    printInventory();
+                    view.printList(inventory);
                     break;
                 case ADD_ITEM_TO_CART:
                     addItemToCart();
@@ -99,7 +101,7 @@ public class Shop {
                     createEmployeeAccount();
                     break;
                 case DELETE_EMPLOYEE_ACCOUNT:
-                    //TODO
+                    deleteEmployeeAccount();
                     break;
                 case PRINT_EMPLOYEE_ARRAY:
                     printEmployees();
@@ -108,13 +110,13 @@ public class Shop {
                     createCustomerAccount();
                     break;
                 case DELETE_CUSTOMER_ACCOUNT:
-                    //TODO
+                    //TODO or not
                     break;
                 case PRINT_CUSTOMER_ARRAY:
                     printCustomers();
                     break;
                 case PRINT_USER_ARRAY:
-                    printUsers();
+                    view.printList(users);
                     break;
                 case WRITE_USERS_TO_FILE:
                     FileUtils.saveObject(users, "Users.ser");
@@ -140,22 +142,28 @@ public class Shop {
                     addInventoryItem();
                     break;
                 case INCREASE_ITEM_STOCK:
-                    //TODO
+                    increaseStockOfItem();
                     break;
                 case VIEW_ITEMS_BY_NAME:
-                    //TODO
+                    Collections.sort(inventory, new Item.SortAlphabetically());
+                    view.printList(inventory);
                     break;
                 case VIEW_ITEMS_BY_PRICE:
-                    //TODO
+                    Collections.sort(inventory, new Item.SortByPrice());
+                    view.printList(inventory);
                     break;
                 case VIEW_ITEMS_BY_STOCK:
-                    //TODO
+                    Collections.sort(inventory, new Item.SortByStock());
+                    view.printList(inventory);
                     break;
                 case WRITE_ITEMS_TO_FILE:
                     writeInventoryToFile();
                     break;
                 case READ_ITEMS_FROM_FILE:
                     readInventoryFromFile();
+                    break;
+                case RETURN:
+                    employeeMenu();
                     break;
                 default:
                     view.printErrorMessage("Invalid choice");
@@ -248,6 +256,23 @@ public class Shop {
         users.add(new Employee(name, login, password, salary));
     }
 
+    public void deleteEmployeeAccount(){ //TODO merge with delete customer, can't delete self
+        view.printLine("Enter employee login");
+        String employeeToRemoveLogin = view.readString();
+        boolean employeeFound = false;
+        for (int i = 0; i < users.size(); i++){ //for loop?
+            if (users.get(i).getLogin().equalsIgnoreCase(employeeToRemoveLogin)){
+                employeeFound = true;
+                users.remove(i);
+            }
+        }
+        if (employeeFound) {
+            view.printLine("Employee account removed");
+        } else {
+            view.printErrorMessage("User not found");
+        }
+    }
+
     public void addInventoryItem() {
         view.printLine("Enter name of product");
         String name = view.readString();
@@ -257,19 +282,32 @@ public class Shop {
         inventory.add(new Item(name, price));
     }
 
+    public void increaseStockOfItem(){ // TODO clean up, maybe while loop, no negative increases
+        view.printLine("Enter name of Item");
+        String itemToIncrease = view.readString();
+        boolean itemFound = false;
+        int indexOfItemFound = -1;
+        for (int i = 0; i < inventory.size(); i++){
+            if (inventory.get(i).getName().equalsIgnoreCase(itemToIncrease)){
+                itemFound = true;
+                indexOfItemFound = i;
+            }
+        }
+        if (itemFound){
+            view.printLine("Increase by how much?");
+            int increase = view.readInt();
+            inventory.get(indexOfItemFound).addStock(increase);
+        } else {
+            view.printErrorMessage("Item not found");
+        }
+    }
+
     public void writeInventoryToFile() {
         FileUtils.saveObject(inventory, "Inventory.ser");
     }
 
     public void readInventoryFromFile() {
         inventory = (ArrayList<Item>) FileUtils.loadObject("Inventory.ser");
-    }
-
-    public void printUsers() {
-        for (User user : users) {
-            view.printLine(user.toString());
-        }
-        //TODO throw into View
     }
 
     public void printEmployees() {
@@ -298,11 +336,6 @@ public class Shop {
         //TODO throw into View
     }
 
-    public void printInventory() {
-        for (Item item : inventory) {
-            view.printLine(item.toString());
-        }
-    }
 
     public void addItemToCart() { // needs method to check for amount in cart vs amount in stock
         view.printLine("Enter name of purchase");
@@ -336,6 +369,7 @@ public class Shop {
         users.add(new Customer("Ludvig", "customer", "password"));
         users.add(new Customer("Örjan", "bl", "password"));
         users.add(new Customer("Anders", "ad", "password"));
+        users.add(new Employee("Alban", "admin2", "password", 1));
 
         Collections.sort(users);
         //   printUsers();
@@ -348,7 +382,7 @@ public class Shop {
         inventory.add(new Item("Kanelbulle", 12));
         inventory.add(new Item("Te", 5));
 
-        for (Item item : inventory) {
+        for (Item item : inventory) { // TODO use rand to generate for final save
             item.addStock(20);
         }
 
