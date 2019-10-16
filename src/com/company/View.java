@@ -47,10 +47,10 @@ public class View {
             System.out.println((i + 1) + ". " + menuItems[i].getDescription());
         }
         int menuChoice = -1;
-        Scanner scan = new Scanner(System.in);
+       // Scanner scan = new Scanner(System.in);
         do {
             try {
-                menuChoice = Integer.parseInt(scan.nextLine());
+                menuChoice = Integer.parseInt(scanner.nextLine());
                 return menuItems[menuChoice - 1];
             } catch (Exception e) {
                 printErrorMessage("Invalid choice, try again.");

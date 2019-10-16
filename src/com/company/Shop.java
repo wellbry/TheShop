@@ -7,7 +7,7 @@ import java.util.Scanner;
 import java.util.function.ToDoubleBiFunction;
 
 public class Shop {
-    Scanner scan = new Scanner(System.in);
+  //  Scanner scan = new Scanner(System.in);
     //  ArrayList<Customer> customers = new ArrayList<>();
     //  ArrayList<Employee> employees = new ArrayList<>();
     View view = View.getInstance();
@@ -166,7 +166,7 @@ public class Shop {
 
     public void logIn() {
         view.printLine("Enter login");
-        String login = scan.nextLine();
+        String login = view.readString();
         boolean found = false;
         // TODO found needs to be used, if !found can't log in
         int indexOfFound = -1;
@@ -177,7 +177,7 @@ public class Shop {
             }
         }
         view.printLine("Enter password");
-        String password = scan.nextLine();
+        String password = view.readString();
         if (password.equals(users.get(indexOfFound).getPassword())
                 && users.get(indexOfFound).getUserType().equals(User.UserType.CUSTOMER)) {
             loggedInCustomer = (Customer) users.get(indexOfFound);
@@ -196,55 +196,57 @@ public class Shop {
         boolean isName;
         String name;
         do {
-            System.out.println("Enter name");
-            name = scan.nextLine();
+            view.printLine("Enter name");
+            name = view.readString();
             isName = InputSanitizers.isAlphabet(name);
         } while (!isName);
-        System.out.println("Enter login");
+        view.printLine("Enter login");
         boolean loginTaken = false;
         do {
-            login = scan.nextLine();
+            login = view.readString();
             for (User user : users) {
                 if (login.equals(user.getLogin())) {
                     loginTaken = true;
-                    System.out.println("Login taken, please try again");
+                    view.printLine("Login taken, please try again");
                 }
             }
         } while (loginTaken);
-        System.out.println("Choose password");
-        String password = scan.nextLine();
+        view.printLine("Choose password");
+        String password = view.readString();
         users.add(new Customer(name, login, password));
-        System.out.println("Account created, you may now log in with your new account");
+        view.printLine("Account created, you may now log in with your new account");
     }
 
     public void createEmployeeAccount() {
         String login;
-        System.out.println("Enter name");
-        String name = scan.nextLine();
+        view.printLine("Enter name");
+        String name = view.readString();
         System.out.println("Enter login");
         boolean loginTaken = false;
         do {
-            login = scan.nextLine();
+            login = view.readString();
             for (User user : users) {
                 if (login.equals(user.getLogin())) {
                     loginTaken = true;
-                    System.out.println("Login taken, please try again");
+                    view.printErrorMessage("Login taken, please try again");
                 }
             }
         } while (loginTaken);
 
-        System.out.println("Choose password");
-        String password = scan.nextLine();
-        System.out.println("Enter Salary");
-        int salary = InputSanitizers.convertToInt(scan.nextLine());
+        view.printLine("Choose password");
+        String password = view.readString();
+        view.printLine("Enter Salary");
+        int salary = InputSanitizers.convertToInt(view.readString());
+        //TODO no negative salaries
         users.add(new Employee(name, login, password, salary));
     }
 
     public void addInventoryItem() {
-        System.out.println("Enter name of product");
-        String name = scan.nextLine();
-        System.out.println("Enter price");
-        int price = InputSanitizers.convertToInt(scan.nextLine());
+        view.printLine("Enter name of product");
+        String name = view.readString();
+        view.printLine("Enter price");
+        int price = InputSanitizers.convertToInt(view.readString());
+        //TODO no negative prices
         inventory.add(new Item(name, price));
     }
 
@@ -258,8 +260,9 @@ public class Shop {
 
     public void printUsers() {
         for (User user : users) {
-            System.out.println(user);
+            view.printLine(user.toString());
         }
+        //TODO throw into View
     }
 
     public void printEmployees() {
@@ -270,8 +273,9 @@ public class Shop {
             }
         }
         for (Employee employee : employees) {
-            System.out.println(employee);
+            view.printLine(employee.toString());
         }
+        //TODO throw into view
     }
 
     public void printCustomers() {
@@ -282,8 +286,9 @@ public class Shop {
             }
         }
         for (Customer customer : customers) {
-            System.out.println(customer);
+            view.printLine(customer.toString());
         }
+        //TODO throw into View
     }
 
     public void printInventory() {
@@ -297,8 +302,8 @@ public class Shop {
     }
 
     public void addItemToCart() { // needs method to check for amount in cart vs amount in stock
-        System.out.println("Enter name of purchase");
-        String input = scan.nextLine();
+        view.printLine("Enter name of purchase");
+        String input = view.readString();
         String itemName = "";
         int itemPrice = -1;
         boolean itemFound = false;
@@ -311,12 +316,12 @@ public class Shop {
 
         }
         if (!itemFound) {
-            System.out.println("Item not found, try again");
+            view.printErrorMessage("Item not found, try again");
             return;
         }
-        System.out.println("Enter amount");
-        int amount = InputSanitizers.convertToInt(scan.nextLine());
-
+        view.printLine("Enter amount");
+        int amount = InputSanitizers.convertToInt(view.readString());
+        //TODO no negative amounts/check cart
         loggedInCustomer.addItemToCart(itemName, itemPrice, amount);
     }
 
