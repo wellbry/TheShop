@@ -20,8 +20,14 @@ public class Customer extends User {
         this.balance = balance;
     }
 
-    public void pay(int cost) {
+    public int pay(int cost) {
         balance -= cost;
+        return balance;
+    }
+
+    public int depositMoney(int deposit) {
+        balance += deposit;
+        return balance;
     }
 
     public void addItemToCart(String itemName, int itemPrice, int amount) {
@@ -44,6 +50,10 @@ public class Customer extends User {
 
     public ArrayList<Item> getShoppingCart(){
         return shoppingCart;
+    }
+
+    public void emptyShoppingCart(){
+        shoppingCart.clear();
     }
 
     public void printShoppingCart(){

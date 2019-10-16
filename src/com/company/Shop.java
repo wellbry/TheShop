@@ -1,22 +1,20 @@
 package com.company;
 
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
-import java.util.function.ToDoubleBiFunction;
+import java.util.Random;
 
 public class Shop {
     //  Scanner scan = new Scanner(System.in);
     //  ArrayList<Customer> customers = new ArrayList<>();
     //  ArrayList<Employee> employees = new ArrayList<>();
-    //TODO replace all getPassword with isCorrectPassword
 
     View view = View.getInstance();
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Item> inventory = new ArrayList<>();
     private Customer loggedInCustomer;
     private Employee loggedInEmployee;
+    private User loggedInUser;
 
     public Shop() {
         users.add(new Employee("Magnus", "admin", "password", 1));
@@ -62,8 +60,24 @@ public class Shop {
                 case SHOW_CART:
                     loggedInCustomer.printShoppingCart();
                     break;
+                case EMPTY_CART:
+                    loggedInCustomer.emptyShoppingCart();
+                    break;
+                case CHECK_OUT:
+                    //TODO
+                    break;
+                case SHOW_BALANCE:
+                    view.printLine("Your balance is " + loggedInCustomer.getBalance());
+                    break;
+                case DEPOSIT_CASH:
+                    depositMoneyToCustomer();
+                    break;
+                case CHANGE_PASSWORD:
+                    changePassword();
+                    break;
                 case LOGOUT:
                     loggedInCustomer = null;
+                    loggedInUser = null;
                     loginMenu();
                     break;
             }
@@ -81,8 +95,12 @@ public class Shop {
                 case HANDLE_INVENTORY:
                     handleInventoryMenu();
                     break;
+                case CHANGE_PASSWORD:
+                    changePassword();
+                    break;
                 case LOGOUT:
                     loggedInEmployee = null;
+                    loggedInUser = null;
                     loginMenu();
                     break;
                 default:
@@ -100,17 +118,14 @@ public class Shop {
                 case ADD_EMPLOYEE:
                     createEmployeeAccount();
                     break;
-                case DELETE_EMPLOYEE_ACCOUNT:
-                    deleteEmployeeAccount();
+                case DELETE_ACCOUNT:
+                    deleteAccount();
                     break;
                 case PRINT_EMPLOYEE_ARRAY:
                     printEmployees();
                     break;
                 case ADD_CUSTOMER:
                     createCustomerAccount();
-                    break;
-                case DELETE_CUSTOMER_ACCOUNT:
-                    //TODO or not
                     break;
                 case PRINT_CUSTOMER_ARRAY:
                     printCustomers();
@@ -186,20 +201,35 @@ public class Shop {
             }
             if (!userFound) {
                 view.printErrorMessage("User not found");
-              //  return;
+                //  return;
             }
         }
         view.printLine("Enter password");
         String password = view.readString();
-        if (password.equals(users.get(indexOfFoundUser).getPassword())
+        if (users.get(indexOfFoundUser).isCorrectPassword(password)
                 && users.get(indexOfFoundUser).getUserType().equals(User.UserType.CUSTOMER)) {
             loggedInCustomer = (Customer) users.get(indexOfFoundUser);
+            loggedInUser = users.get(indexOfFoundUser);
             customerMenu();
-        } else if (password.equals(users.get(indexOfFoundUser).getPassword())
+        } else if (users.get(indexOfFoundUser).isCorrectPassword(password)
                 && users.get(indexOfFoundUser).getUserType().equals(User.UserType.EMPLOYEE)) {
             loggedInEmployee = (Employee) users.get(indexOfFoundUser);
+            loggedInUser = users.get(indexOfFoundUser);
             employeeMenu();
         } else {
+            view.printErrorMessage("Wrong password");
+        }
+    }
+
+    public void changePassword(){
+        //TODO while?
+        view.printLine("Enter old password");
+        String oldPass = view.readString();
+        if (loggedInUser.isCorrectPassword(oldPass)){
+            view.printLine("Enter new password");
+            String newPass = view.readString();
+            loggedInUser.setPassword(newPass);
+        }else {
             view.printErrorMessage("Wrong password");
         }
     }
@@ -251,23 +281,32 @@ public class Shop {
         view.printLine("Choose password");
         String password = view.readString();
         view.printLine("Enter Salary");
-        int salary = InputSanitizers.convertToInt(view.readString());
-        //TODO no negative salaries
+        int salary = -1;
+        while (salary < 0) {
+            salary = InputSanitizers.convertToInt(view.readString());
+            if (salary < 0) {
+                view.printErrorMessage("Salary may not be negative");
+            }
+        }
         users.add(new Employee(name, login, password, salary));
     }
 
-    public void deleteEmployeeAccount(){ //TODO merge with delete customer, can't delete self
-        view.printLine("Enter employee login");
-        String employeeToRemoveLogin = view.readString();
-        boolean employeeFound = false;
-        for (int i = 0; i < users.size(); i++){ //for loop?
-            if (users.get(i).getLogin().equalsIgnoreCase(employeeToRemoveLogin)){
-                employeeFound = true;
-                users.remove(i);
+    public void deleteAccount() { //TODO merge with delete customer, can't delete self (loggedInUser?)
+        view.printLine("Enter login");
+        String userToRemoveLogin = view.readString();
+        boolean userFound = false;
+        int indexOfFound = -1;
+        for (int i = 0; i < users.size(); i++) { //for loop?
+            if (users.get(i).getLogin().equalsIgnoreCase(userToRemoveLogin)) {
+                userFound = true;
+                indexOfFound = i;
             }
         }
-        if (employeeFound) {
-            view.printLine("Employee account removed");
+        if (users.get(indexOfFound) == loggedInUser){
+            view.printErrorMessage("May not remove logged in account");
+        } else if (userFound) {
+            users.remove(indexOfFound);
+            view.printLine("Account removed");
         } else {
             view.printErrorMessage("User not found");
         }
@@ -282,18 +321,18 @@ public class Shop {
         inventory.add(new Item(name, price));
     }
 
-    public void increaseStockOfItem(){ // TODO clean up, maybe while loop, no negative increases
+    public void increaseStockOfItem() { // TODO clean up, maybe while loop, no negative increases
         view.printLine("Enter name of Item");
         String itemToIncrease = view.readString();
         boolean itemFound = false;
         int indexOfItemFound = -1;
-        for (int i = 0; i < inventory.size(); i++){
-            if (inventory.get(i).getName().equalsIgnoreCase(itemToIncrease)){
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory.get(i).getName().equalsIgnoreCase(itemToIncrease)) {
                 itemFound = true;
                 indexOfItemFound = i;
             }
         }
-        if (itemFound){
+        if (itemFound) {
             view.printLine("Increase by how much?");
             int increase = view.readInt();
             inventory.get(indexOfItemFound).addStock(increase);
@@ -361,6 +400,21 @@ public class Shop {
         loggedInCustomer.addItemToCart(itemName, itemPrice, amount);
     }
 
+    public void checkOut() {
+        //TODO
+    }
+
+    public void depositMoneyToCustomer() { //TODO clean up
+        view.printLine("Enter amount");
+        int deposit = -1;
+        while (deposit < 0) {
+            deposit = InputSanitizers.convertToInt(view.readString());
+            if (deposit < 0) view.printErrorMessage("Deposit must be a positive number");
+        }
+        int balance = loggedInCustomer.depositMoney(deposit);
+        view.printLine("Deposit successful. Current balance: " + balance);
+    }
+
     public void nukeInventory() {
         inventory.clear();
     }
@@ -382,8 +436,10 @@ public class Shop {
         inventory.add(new Item("Kanelbulle", 12));
         inventory.add(new Item("Te", 5));
 
+        Random rand = new Random();
+
         for (Item item : inventory) { // TODO use rand to generate for final save
-            item.addStock(20);
+            item.addStock(10 + rand.nextInt(11));
         }
 
     /*    Collections.sort(items, new Item.SortAlphabetically());

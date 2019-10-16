@@ -82,8 +82,13 @@ public class View {
         ITEMS_BY_PRICE("Show items by price"),
         ADD_ITEM_TO_CART("Add item to cart"),
         SHOW_CART("Show Cart"),
+        EMPTY_CART("Empty shopping cart"),
+        CHECK_OUT("Check out shopping cart"),
+        SHOW_BALANCE("Display account balance"),
+        DEPOSIT_CASH("Deposit money"),
+        CHANGE_PASSWORD("Change password"),
         LOGOUT("Log out");
-        //TODO add money, check out
+        //TODO add money, check out, change password
 
         public String menuItemString;
 
@@ -100,6 +105,7 @@ public class View {
     public enum EmployeeMenuItem implements HasDescription {
         HANDLE_ACCOUNTS("Handle user accounts"),
         HANDLE_INVENTORY("Handle inventory"),
+        CHANGE_PASSWORD("Change password"),
         LOGOUT("Log out");
 
         private String menuItemString;
@@ -114,14 +120,13 @@ public class View {
         }
     }
 
-    public enum HandleAccountsMenuItem implements HasDescription {
+    public enum HandleAccountsMenuItem implements HasDescription { //TODO consolidate create methods?
         ADD_EMPLOYEE("Add new employee account"),
-        DELETE_EMPLOYEE_ACCOUNT("Delete employee account"),
         PRINT_EMPLOYEE_ARRAY("Display employees"),
         ADD_CUSTOMER("Add new customer account"),
-        DELETE_CUSTOMER_ACCOUNT("Delete customer account"),
         PRINT_CUSTOMER_ARRAY("Display customers"),
         PRINT_USER_ARRAY("Display all users"),
+        DELETE_ACCOUNT("Delete account"),
         WRITE_USERS_TO_FILE("Save all users to file"),
         READ_USERS_FROM_FILE("Read users from file"),
         RETURN("Return to menu");

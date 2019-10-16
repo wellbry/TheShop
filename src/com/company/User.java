@@ -20,14 +20,18 @@ public abstract class User implements Comparable<User>{
         return login;
     }
 
-    public String getPassword() {
-        return password;
-    }
+//    public String getPassword() {
+//        return password;
+//    }
 
     public boolean isCorrectPassword(String string){
         if (password.equals(string)){
             return true;
         } else return false;
+    }
+
+    public void setPassword(String newPass){
+        password = newPass;
     }
 
     public UserType getUserType(){

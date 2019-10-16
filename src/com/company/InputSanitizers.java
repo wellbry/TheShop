@@ -16,7 +16,7 @@ public class InputSanitizers {
             int number = Integer.parseInt(str);
             return number;
         } catch (Exception e) {
-            return 0;
+            return -1;
         }
     }
 
