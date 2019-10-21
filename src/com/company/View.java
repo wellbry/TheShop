@@ -3,6 +3,10 @@ package com.company;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * The View class
+ * @author Magnus Wellbring
+ */
 public class View {
 
     private static View instance = null;
@@ -59,7 +63,9 @@ public class View {
     }
 
 
-
+    /**
+     * The available options in the log in menu
+     */
     public enum LoginMenuItem implements HasDescription {
         LOGIN("Log in"),
         CREATE_CUSTOMER_ACCOUNT("Create new account"),
@@ -77,6 +83,9 @@ public class View {
         }
     }
 
+    /**
+     * The available options in the Customer menu
+     */
     public enum CustomerMenuItem implements HasDescription {
         ITEMS_BY_NAME("Show items by name"),
         ITEMS_BY_PRICE("Show items by price"),
@@ -102,6 +111,9 @@ public class View {
         }
     }
 
+    /**
+     * The available options in the Employee main menu
+     */
     public enum EmployeeMenuItem implements HasDescription {
         HANDLE_ACCOUNTS("Handle user accounts"),
         HANDLE_INVENTORY("Handle inventory"),
@@ -120,6 +132,9 @@ public class View {
         }
     }
 
+    /**
+     * The available options in the Handle Accounts submenu
+     */
     public enum HandleAccountsMenuItem implements HasDescription { //TODO consolidate create methods?
         ADD_EMPLOYEE("Add new employee account"),
         PRINT_EMPLOYEE_ARRAY("Display employees"),
@@ -143,6 +158,9 @@ public class View {
         }
     }
 
+    /**
+     * The available options in the Handle Inventory submenu
+     */
     public enum HandleInventoryMenuItem implements HasDescription{
         ADD_ITEM("Add new item for sale"),
         INCREASE_ITEM_STOCK("Increase item stock"),

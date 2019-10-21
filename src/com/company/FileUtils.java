@@ -11,8 +11,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 
+/**
+ * Saves and loads objects from/to files
+ * @author
+ */
 public class FileUtils {
 
+    /**
+     * Saves an object to file
+     * @param o
+     * @param filename
+     */
     public static void saveObject(Object o, String filename) {
         Path path = Paths.get(filename);
         try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(path))) {
@@ -22,6 +31,11 @@ public class FileUtils {
         }
     }
 
+    /**
+     * Loads an object from a file
+     * @param filename
+     * @return
+     */
     public static Object loadObject(String filename){  //typeCasta objektet vid load
         Path path = Paths.get(filename);
         try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(path))){
