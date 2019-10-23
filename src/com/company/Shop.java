@@ -58,7 +58,7 @@ public class Shop {
                     addItemToCart();
                     break;
                 case SHOW_CART:
-                    loggedInCustomer.printShoppingCart();
+                    view.printList(loggedInCustomer.getShoppingCart());
                     break;
                 case EMPTY_CART:
                     loggedInCustomer.emptyShoppingCart();
@@ -137,7 +137,7 @@ public class Shop {
                     FileUtils.saveObject(users, "Users.ser");
                     break;
                 case READ_USERS_FROM_FILE:
-                    FileUtils.loadObject("Users.ser");
+                    users = (ArrayList<User>) FileUtils.loadObject("Users.ser");
                     break;
                 case RETURN:
                     employeeMenu();
@@ -355,9 +355,7 @@ public class Shop {
                 employees.add((Employee) user);
             }
         }
-        for (Employee employee : employees) {
-            view.printLine(employee.toString());
-        }
+        view.printList(employees);
         //TODO throw into view
     }
 
@@ -368,12 +366,9 @@ public class Shop {
                 customers.add((Customer) user);
             }
         }
-        for (Customer customer : customers) {
-            view.printLine(customer.toString());
-        }
+        view.printList(customers);
         //TODO throw into View
     }
-
 
     public void addItemToCart() { // needs method to check for amount in cart vs amount in stock
         view.printLine("Enter name of purchase");

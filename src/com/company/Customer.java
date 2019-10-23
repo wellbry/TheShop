@@ -112,7 +112,7 @@ public class Customer extends User {
         shoppingCart.clear();
     }
 
-    // TODO move to view
+    // TODO move to view, tell if empty
     public void printShoppingCart(){
         for (Item item: shoppingCart){
             System.out.println(item.toString());

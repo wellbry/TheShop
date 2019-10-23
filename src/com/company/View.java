@@ -40,7 +40,7 @@ public class View {
     }
 
     public <E> void printList(ArrayList<E> list){ //TODO fix (fixed?)
-        for (Object listItem : list) {
+        for (E listItem : list) {
             System.out.println(listItem.toString());
         }
     }
