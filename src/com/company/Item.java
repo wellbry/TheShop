@@ -28,8 +28,16 @@ public class Item implements Serializable {
         return price;
     }
 
+    public int getAmount() {
+        return amount;
+    }
+
     public void addStock(int increase){
         amount += increase;
+    }
+
+    public void removeStock(int decrease){
+        amount -= decrease;
     }
 
     public String toString() {

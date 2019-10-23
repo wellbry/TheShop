@@ -10,7 +10,6 @@ public class InputSanitizers {
      * Checks if the input String is an int
      * @param str The string to check
      * @return True if the input String is a number
-     * @deprecated
      */
     public boolean isNumber(String str) {
         try {

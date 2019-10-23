@@ -82,6 +82,21 @@ public class Customer extends User {
         }
     }
 
+    public int getAmountInCart(String itemName){
+        int indexOfItem = -1;
+        boolean itemFound = false;
+        for (int i = 0; i<shoppingCart.size(); i++){
+            if (itemName.equalsIgnoreCase(shoppingCart.get(i).getName())){
+                indexOfItem = i;
+                itemFound = true;
+            }
+        }
+        if (itemFound){
+            return shoppingCart.get(indexOfItem).getAmount();
+        }
+        return 0;
+    }
+
     /**
      * Returns this Customer's shopping cart
      * @return This Customer's shopping cart

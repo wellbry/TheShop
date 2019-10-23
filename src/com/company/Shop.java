@@ -64,7 +64,7 @@ public class Shop {
                     loggedInCustomer.emptyShoppingCart();
                     break;
                 case CHECK_OUT:
-                    //TODO
+                    checkOut();
                     break;
                 case SHOW_BALANCE:
                     view.printLine("Your balance is " + loggedInCustomer.getBalance());
@@ -185,7 +185,6 @@ public class Shop {
             }
         }
     }
-
 
     public void logIn() {
         view.printLine("Enter login");
@@ -382,11 +381,13 @@ public class Shop {
         String itemName = "";
         int itemPrice = -1;
         boolean itemFound = false;
+        int indexOfFound = 0;
         for (int i = 0; i < inventory.size(); i++) {
             if (input.equalsIgnoreCase(inventory.get(i).getName())) {
                 itemName = inventory.get(i).getName();
                 itemPrice = inventory.get(i).getPrice();
                 itemFound = true;
+                indexOfFound = i;
             }
 
         }
@@ -396,12 +397,37 @@ public class Shop {
         }
         view.printLine("Enter amount");
         int amount = InputSanitizers.convertToInt(view.readString());
-        //TODO no negative amounts/check cart
+        //TODO no negative amounts/check cart, cart inventory may not exceed store inventory
+        if ((amount + loggedInCustomer.getAmountInCart(itemName)) > inventory.get(indexOfFound).getAmount()){
+            view.printErrorMessage("Amount in cart can't exceed amount in stock.");
+            return; //TODO consider while loop
+        }
         loggedInCustomer.addItemToCart(itemName, itemPrice, amount);
     }
 
     public void checkOut() {
         //TODO
+        int sumOfCart = 0;
+        for (Item item:loggedInCustomer.getShoppingCart()){
+            int price = item.getPrice();
+            int amount = item.getAmount();
+            sumOfCart += price*amount;
+        }
+        if (sumOfCart > loggedInCustomer.getBalance()){
+            view.printErrorMessage("Cost of cart exceeds balance");
+        } else {
+            for (Item item:loggedInCustomer.getShoppingCart()){
+                for (int i = 0; i < inventory.size(); i++) {
+                    if (item.getName().equals(inventory.get(i).getName())){
+                        inventory.get(i).removeStock(item.getAmount());
+                    }
+                }
+            }
+            loggedInCustomer.emptyShoppingCart();
+            loggedInCustomer.pay(sumOfCart);
+            view.printLine(String.format("Checkout successful. Current balance: %d\n", loggedInCustomer.getBalance()));
+        }
+
     }
 
     public void depositMoneyToCustomer() { //TODO clean up
