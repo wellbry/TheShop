@@ -31,14 +31,6 @@ public class Customer extends User {
     }
 
     /**
-     * Sets Customer balance
-     * @param balance
-     */
-    public void setBalance(int balance) {
-        this.balance = balance;
-    }
-
-    /**
      * Subtracts the sent in int from the Customers balance and returns the balance after it's been subtracted
      * @param cost The amount subtracted from this Customers current balance
      * @return The balance of this customer after the cost has been subtracted
@@ -112,10 +104,4 @@ public class Customer extends User {
         shoppingCart.clear();
     }
 
-    // TODO move to view, tell if empty
-    public void printShoppingCart(){
-        for (Item item: shoppingCart){
-            System.out.println(item.toString());
-        }
-    }
 }

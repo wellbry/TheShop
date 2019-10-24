@@ -18,6 +18,7 @@ public class Shop {
 
     public Shop() {
         users.add(new Employee("Magnus", "admin", "password", 1));
+        users.add(new Customer("TestCustomer", "customer", "password"));
     }
 
     public void loginMenu() {
@@ -120,6 +121,9 @@ public class Shop {
                     break;
                 case DELETE_ACCOUNT:
                     deleteAccount();
+                    break;
+                case SET_EMPLOYEE_SALARY:
+                    setEmployeeSalary();
                     break;
                 case PRINT_EMPLOYEE_ARRAY:
                     printEmployees();
@@ -261,6 +265,31 @@ public class Shop {
         view.printLine("Account created, you may now log in with your new account");
     }
 
+    void setEmployeeSalary(){
+        view.printLine("Enter employee login");
+        String employeeEntered = view.readString();
+        boolean employeeFound = false;
+        int indexOfFound = -1;
+        int newSalary = 0;
+        for (int i = 0; i < users.size(); i++){
+            if (users.get(1).getName().equals(employeeEntered) && users.get(1).getUserType() == User.UserType.EMPLOYEE){
+                employeeFound = true;
+                indexOfFound = i;
+            }
+        }
+        if (employeeFound){
+            view.printLine("Enter new salary");
+            newSalary = InputSanitizers.convertToInt(view.readString());
+            if (newSalary < 0){
+                Employee temp = (Employee) users.get(indexOfFound);
+                temp.setSalary(newSalary);
+                users.set(indexOfFound, temp);
+            } else { // TODO cleanup
+                view.printErrorMessage("Salary can't be negative");
+            }
+        }
+    }
+
     public void createEmployeeAccount() {
         String login;
         view.printLine("Enter name");
@@ -290,22 +319,24 @@ public class Shop {
         users.add(new Employee(name, login, password, salary));
     }
 
-    public void deleteAccount() { //TODO merge with delete customer, can't delete self (loggedInUser?)
+    public void deleteAccount() {
         view.printLine("Enter login");
         String userToRemoveLogin = view.readString();
         boolean userFound = false;
         int indexOfFound = -1;
-        for (int i = 0; i < users.size(); i++) { //for loop?
+        for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getLogin().equalsIgnoreCase(userToRemoveLogin)) {
                 userFound = true;
                 indexOfFound = i;
             }
         }
-        if (users.get(indexOfFound) == loggedInUser){
-            view.printErrorMessage("May not remove logged in account");
-        } else if (userFound) {
-            users.remove(indexOfFound);
-            view.printLine("Account removed");
+         if (userFound) {
+             if (users.get(indexOfFound) == loggedInUser){
+                 view.printErrorMessage("May not remove logged in account");
+             } else {
+                 users.remove(indexOfFound);
+                 view.printLine("Account removed");
+             }
         } else {
             view.printErrorMessage("User not found");
         }
@@ -315,9 +346,18 @@ public class Shop {
         view.printLine("Enter name of product");
         String name = view.readString();
         view.printLine("Enter price");
-        int price = InputSanitizers.convertToInt(view.readString());
-        //TODO no negative prices
-        inventory.add(new Item(name, price));
+        boolean isNegativeAmount = false;
+
+        while (!isNegativeAmount) {
+            int price = InputSanitizers.convertToInt(view.readString());
+            //TODO no negative prices
+            if (price <= 0){
+                isNegativeAmount = true;
+                view.printErrorMessage("Price must be more than 0");
+            } else {
+                inventory.add(new Item(name, price));
+            }
+        }
     }
 
     public void increaseStockOfItem() { // TODO clean up, maybe while loop, no negative increases
@@ -436,12 +476,28 @@ public class Shop {
         view.printLine("Deposit successful. Current balance: " + balance);
     }
 
+    public ArrayList<Item> getInventory(){
+        return inventory;
+    }
+
+    public ArrayList<User> getUsers() {
+        return users;
+    }
+
+    public Customer getLoggedInCustomer() {
+        return loggedInCustomer;
+    }
+
+    public User getLoggedInUser() {
+        return loggedInUser;
+    }
+
     public void nukeInventory() {
         inventory.clear();
     }
 
     public void test() {
-        users.add(new Customer("Ludvig", "customer", "password"));
+        users.add(new Customer("Ludvig", "customer2", "password"));
         users.add(new Customer("Örjan", "bl", "password"));
         users.add(new Customer("Anders", "ad", "password"));
         users.add(new Employee("Alban", "admin2", "password", 1));

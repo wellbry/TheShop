@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class View {
 
     private static View instance = null;
-    Scanner scanner = new Scanner(System.in);
+
 
     private View() {
     }
@@ -23,11 +23,13 @@ public class View {
     }
 
     public String readString(){
+        Scanner scanner = new Scanner(System.in);
         String string = scanner.nextLine();
         return string;
     }
 
     public int readInt(){
+        Scanner scanner = new Scanner(System.in);
         return InputSanitizers.convertToInt(scanner.nextLine());
     }
 
@@ -39,13 +41,14 @@ public class View {
         System.out.println("Error: " + errorMessage);
     }
 
-    public <E> void printList(ArrayList<E> list){ //TODO fix (fixed?)
+    public <E> void printList(ArrayList<E> list){
         for (E listItem : list) {
             System.out.println(listItem.toString());
         }
     }
 
     public <T extends HasDescription> T showMenuAndGetChoice(T[] menuItems) {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Make a choice.");
         for (int i = 0; i < menuItems.length; i++) {
             System.out.println((i + 1) + ". " + menuItems[i].getDescription());
@@ -138,6 +141,7 @@ public class View {
     public enum HandleAccountsMenuItem implements HasDescription { //TODO consolidate create methods?
         ADD_EMPLOYEE("Add new employee account"),
         PRINT_EMPLOYEE_ARRAY("Display employees"),
+        SET_EMPLOYEE_SALARY("Set employee salary"),
         ADD_CUSTOMER("Add new customer account"),
         PRINT_CUSTOMER_ARRAY("Display customers"),
         PRINT_USER_ARRAY("Display all users"),
