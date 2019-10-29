@@ -8,11 +8,10 @@ import java.io.Serializable;
  * @author Magnus Wellbring
  */
 public abstract class User implements Comparable<User>, Serializable {
-    UserType userType;
+    private UserType userType;
     private String name;
     private String login;
     private String password;
-    //TODO userType shouldn't be available;
 
     /**
      * Constructor
@@ -21,10 +20,11 @@ public abstract class User implements Comparable<User>, Serializable {
      * @param login    User login name
      * @param password User password
      */
-    public User(String name, String login, String password) {
+    public User(String name, String login, String password, UserType userType) {
         this.name = name;
         this.login = login;
         this.password = password;
+        this.userType = userType;
     }
 
     public String getName() {
@@ -32,17 +32,12 @@ public abstract class User implements Comparable<User>, Serializable {
     }
 
     /**
-     * Retunrns this Users login name
-     *
-     * @return The users login name
+     * Returns this User's login name
+     * @return The user's login name
      */
     public String getLogin() {
         return login;
     }
-
-//    public String getPassword() {
-//        return password;
-//    }
 
     /**
      * Checks if the sent in string is equal to the password
@@ -64,17 +59,18 @@ public abstract class User implements Comparable<User>, Serializable {
     public void setPassword(String newPass) {
         password = newPass;
     }
-    // TODO make change password method
 
     /**
      * Tells you what subclass of User this user is
      *
-     * @return The User subclass
+     * @return The userType
      */
     public UserType getUserType() {
         return userType;
     }
 
+
+//should sort by login?
     /**
      * This class' implementation of the Comparable interface, sorts Users alphabetically by name
      *
@@ -88,13 +84,11 @@ public abstract class User implements Comparable<User>, Serializable {
 
     /**
      * Returns a string representation of the User
-     *
      * @return A string representation of the User
      */
     @Override
     public String toString() {
         return String.format("%10s: %10s: %10s", userType, name, login);
-        // return userType + ": " + name + " " + login;
     }
 
     /**

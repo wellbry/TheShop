@@ -5,89 +5,132 @@ import java.io.ByteArrayInputStream;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShopTest {
-    Shop shop = new Shop();
-
-
-
-    @org.junit.jupiter.api.Test
-    void logIn() {
-        String input = "admin\n";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-    }
 
     @org.junit.jupiter.api.Test
     void changePassword() {
+        String input = "bla\nblabla";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Shop shop = new Shop();
+
+        shop.setLoggedInCustomer(new Customer("bla", "bla", "bla"));
+        shop.changePassword();
+        assertTrue(shop.getLoggedInCustomer().isCorrectPassword("blabla"));
     }
 
     @org.junit.jupiter.api.Test
     void createCustomerAccount() {
-        String input = "admin\n";
+        String input = "Magnus\ncustomer\npassword\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Shop shop = new Shop();
+        shop.createCustomerAccount();
+        assertEquals(2,shop.getUsers().size());
     }
 
     @org.junit.jupiter.api.Test
     void createEmployeeAccount() {
+        String input = "Magnus\nadmin2\npassword\n1\n";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Shop shop = new Shop();
+
+        shop.createEmployeeAccount();
+        assertEquals(2, shop.getUsers().size());
     }
 
     @org.junit.jupiter.api.Test
     void deleteAccount() {
-
-        assertEquals(2, shop.getUsers().size());
-
-//        String input = "admin";
-//        System.setIn(new ByteArrayInputStream(input.getBytes()));
-//        shop.deleteAccount();
-//        assertEquals(2, shop.getUsers().size());
-
-        String input = "customer";
+        String input = "admin";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Shop shop = new Shop();
+
+        assertEquals(1, shop.getUsers().size());
+
         shop.deleteAccount();
-        assertEquals(shop.getUsers().size(), 1);
+        assertEquals(0, shop.getUsers().size());
     }
 
     @org.junit.jupiter.api.Test
     void addInventoryItem() {
-        String input = "testItem\n5\n";
+        String input = "testItem\n5\ntestItem2\n10\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Shop shop = new Shop();
+
         shop.addInventoryItem();
-        assertEquals(shop.getInventory().get(0).getPrice(), 5);
+        shop.addInventoryItem();
+        assertEquals(5, shop.getInventory().get(0).getPrice());
+        assertEquals(10, shop.getInventory().get(1).getPrice());
     }
 
     @org.junit.jupiter.api.Test
-    void increaseStockOfItem() {
-        String input = "testItem\n5\ntestItem\n5";
+    void changeStockOfItem() {
+        String input = "testItem\n5\ntestItem\n7\ntestItem\n-5\ntestItem\n-9";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Shop shop = new Shop();
+
         shop.addInventoryItem();
-        shop.increaseStockOfItem();
-        assertEquals(shop.getInventory().get(0).getAmount(), 5);
-    }
+        shop.changeStockOfItem();
+        assertEquals(7, shop.getInventory().get(0).getAmount());
 
-    @org.junit.jupiter.api.Test
-    void writeInventoryToFile() {
-    }
+        shop.changeStockOfItem();
+        assertEquals(2, shop.getInventory().get(0).getAmount());
 
-    @org.junit.jupiter.api.Test
-    void readInventoryFromFile() {
+        shop.changeStockOfItem();
+        assertEquals(0, shop.getInventory().get(0).getAmount());
     }
-
 
     @org.junit.jupiter.api.Test
     void addItemToCart() {
+        String input = "testItem\n5\ntestItem\n7\ntestItem\n5\ntestItem\n-1\ntestItem\n-10";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Shop shop = new Shop();
+
+        shop.addInventoryItem();
+        shop.changeStockOfItem();
+        shop.setLoggedInCustomer(new Customer("bla", "bla", "bla"));
+
+        shop.addOrRemoveItemsToCart();
+        assertEquals(5, shop.getLoggedInCustomer().getShoppingCart().get(0).getAmount());
+
+        shop.addOrRemoveItemsToCart();
+        assertEquals(4, shop.getLoggedInCustomer().getShoppingCart().get(0).getAmount());
+
+        shop.addOrRemoveItemsToCart();
+        assertEquals(0, shop.getLoggedInCustomer().getShoppingCart().get(0).getAmount());
     }
 
     @org.junit.jupiter.api.Test
     void checkOut() {
+        String input = "200\ntestItem\n5\ntestItem\n7\ntestItem2\n2\ntestItem2\n7\ntestItem\n5\ntestItem2\n5";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Shop shop = new Shop();
+
+        shop.setLoggedInCustomer(new Customer("bla", "bla", "bla"));
+        shop.depositMoneyToCustomer();
+
+        shop.addInventoryItem();
+        shop.changeStockOfItem();
+        shop.addInventoryItem();
+        shop.changeStockOfItem();
+
+        shop.addOrRemoveItemsToCart();
+        shop.addOrRemoveItemsToCart();
+
+        shop.checkOut();
+
+        assertEquals(165, shop.getLoggedInCustomer().getBalance());
     }
 
     @org.junit.jupiter.api.Test
     void depositMoneyToCustomer() {
-        String input = "100\n";
+        String input = "100\n-50";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        Shop shop = new Shop();
 
+        shop.setLoggedInCustomer(new Customer("bla", "bla", "bla"));
+        shop.depositMoneyToCustomer();
+        assertEquals(100, shop.getLoggedInCustomer().getBalance());
 
+        shop.depositMoneyToCustomer();
+        assertEquals(100, shop.getLoggedInCustomer().getBalance());
     }
 
-    @org.junit.jupiter.api.Test
-    void nukeInventory() {
-    }
 }

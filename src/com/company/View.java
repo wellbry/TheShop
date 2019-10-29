@@ -5,12 +5,12 @@ import java.util.Scanner;
 
 /**
  * The View class
+ *
  * @author Magnus Wellbring
  */
 public class View {
-
     private static View instance = null;
-
+    Scanner scanner = new Scanner(System.in);
 
     private View() {
     }
@@ -22,33 +22,26 @@ public class View {
         return instance;
     }
 
-    public String readString(){
-        Scanner scanner = new Scanner(System.in);
+    public String readString() {
         String string = scanner.nextLine();
         return string;
     }
 
-    public int readInt(){
-        Scanner scanner = new Scanner(System.in);
-        return InputSanitizers.convertToInt(scanner.nextLine());
-    }
-
-    public void printLine(String string){
+    public void printLine(String string) {
         System.out.println(string);
     }
 
-    public void printErrorMessage(String errorMessage){
+    public void printErrorMessage(String errorMessage) {
         System.out.println("Error: " + errorMessage);
     }
 
-    public <E> void printList(ArrayList<E> list){
+    public <E> void printList(ArrayList<E> list) {
         for (E listItem : list) {
             System.out.println(listItem.toString());
         }
     }
 
     public <T extends HasDescription> T showMenuAndGetChoice(T[] menuItems) {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Make a choice.");
         for (int i = 0; i < menuItems.length; i++) {
             System.out.println((i + 1) + ". " + menuItems[i].getDescription());
@@ -74,15 +67,15 @@ public class View {
         CREATE_CUSTOMER_ACCOUNT("Create new account"),
         QUIT("Quit");
 
-        private String menuItemString;
+        private String description;
 
-        LoginMenuItem(String menuItemString) {
-            this.menuItemString = menuItemString;
+        LoginMenuItem(String description) {
+            this.description = description;
         }
 
         @Override
         public String getDescription() {
-            return menuItemString;
+            return description;
         }
     }
 
@@ -92,7 +85,7 @@ public class View {
     public enum CustomerMenuItem implements HasDescription {
         ITEMS_BY_NAME("Show items by name"),
         ITEMS_BY_PRICE("Show items by price"),
-        ADD_ITEM_TO_CART("Add item to cart"),
+        ADD_OR_REMOVE_ITEM_TO_CART("Add items to cart, or change amount of items in cart"),
         SHOW_CART("Show Cart"),
         EMPTY_CART("Empty shopping cart"),
         CHECK_OUT("Check out shopping cart"),
@@ -102,15 +95,15 @@ public class View {
         LOGOUT("Log out");
         //TODO add money, check out, change password
 
-        public String menuItemString;
+        public String description;
 
         CustomerMenuItem(String menuItemString) {
-            this.menuItemString = menuItemString;
+            this.description = menuItemString;
         }
 
         @Override
         public String getDescription() {
-            return menuItemString;
+            return description;
         }
     }
 
@@ -123,15 +116,15 @@ public class View {
         CHANGE_PASSWORD("Change password"),
         LOGOUT("Log out");
 
-        private String menuItemString;
+        private String description;
 
         EmployeeMenuItem(String menuItemString) {
-            this.menuItemString = menuItemString;
+            this.description = menuItemString;
         }
 
         @Override
         public String getDescription() {
-            return menuItemString;
+            return description;
         }
     }
 
@@ -139,7 +132,7 @@ public class View {
      * The available options in the Handle Accounts submenu
      */
     public enum HandleAccountsMenuItem implements HasDescription { //TODO consolidate create methods?
-        ADD_EMPLOYEE("Add new employee account"),
+        ADD_EMPLOYEE("Add a new employee account"),
         PRINT_EMPLOYEE_ARRAY("Display employees"),
         SET_EMPLOYEE_SALARY("Set employee salary"),
         ADD_CUSTOMER("Add new customer account"),
@@ -151,7 +144,8 @@ public class View {
         RETURN("Return to menu");
 
         private String menuItemString;
-        HandleAccountsMenuItem(String menuItemString){
+
+        HandleAccountsMenuItem(String menuItemString) {
             this.menuItemString = menuItemString;
         }
 
@@ -165,25 +159,25 @@ public class View {
     /**
      * The available options in the Handle Inventory submenu
      */
-    public enum HandleInventoryMenuItem implements HasDescription{
-        ADD_ITEM("Add new item for sale"),
-        INCREASE_ITEM_STOCK("Increase item stock"),
-        VIEW_ITEMS_BY_NAME("Display item in alphabetical order"),
-        VIEW_ITEMS_BY_PRICE("Display items in order of price"),
-        VIEW_ITEMS_BY_STOCK("Display item in order of current stock"),
+    public enum HandleInventoryMenuItem implements HasDescription {
+        ADD_ITEM("Add a new item for sale"),
+        CHANGE_ITEM_STOCK("Increase or decrease item stock"),
+        VIEW_ITEMS_BY_NAME("Display inventory in alphabetical order"),
+        VIEW_ITEMS_BY_PRICE("Display inventory in order of price"),
+        VIEW_ITEMS_BY_STOCK("Display inventory in order of current stock"),
         WRITE_ITEMS_TO_FILE("Write inventory to file"),
         READ_ITEMS_FROM_FILE("Read inventory from file"),
         RETURN("Return to menu");
 
-        private String menuItemString;
+        private String description;
 
-        HandleInventoryMenuItem(String menuItemString){
-            this.menuItemString = menuItemString;
+        HandleInventoryMenuItem(String menuItemString) {
+            this.description = menuItemString;
         }
 
         @Override
         public String getDescription() {
-            return menuItemString;
+            return description;
         }
     }
 

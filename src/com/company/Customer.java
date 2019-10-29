@@ -17,9 +17,8 @@ public class Customer extends User {
      * @param password  Customer password
      */
     public Customer(String name, String login, String password) {
-        super(name, login, password);
-        balance = 200;
-        userType = UserType.CUSTOMER;
+        super(name, login, password, UserType.CUSTOMER);
+        balance = 0;
     }
 
     /**
@@ -66,27 +65,17 @@ public class Customer extends User {
             }
         }
         if (itemFound) {
-            shoppingCart.get(indexOfItem).addStock(amount);
+            shoppingCart.get(indexOfItem).changeStock(amount);
         } else {
             Item item = new Item(itemName, itemPrice);
             shoppingCart.add(item);
-            shoppingCart.get(shoppingCart.lastIndexOf(item)).addStock(amount);
+            shoppingCart.get(shoppingCart.lastIndexOf(item)).changeStock(amount);
         }
     }
 
-    public int getAmountInCart(String itemName){
-        int indexOfItem = -1;
-        boolean itemFound = false;
-        for (int i = 0; i<shoppingCart.size(); i++){
-            if (itemName.equalsIgnoreCase(shoppingCart.get(i).getName())){
-                indexOfItem = i;
-                itemFound = true;
-            }
-        }
-        if (itemFound){
-            return shoppingCart.get(indexOfItem).getAmount();
-        }
-        return 0;
+
+    public void changeAmountInCart(int index, int change){
+        shoppingCart.get(index).changeStock(change);
     }
 
     /**

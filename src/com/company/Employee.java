@@ -15,9 +15,8 @@ public class Employee extends User {
      * @param salary Employee salary
      */
     public Employee(String name, String login, String password, int salary){
-        super(name, login, password);
+        super(name, login, password, UserType.EMPLOYEE);
         this.salary = salary;
-        userType = UserType.EMPLOYEE;
     }
 
     public int getSalary() {
@@ -26,5 +25,10 @@ public class Employee extends User {
 
     public void setSalary(int salary) {
         this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + String.format("%10d SEK/month", salary);
     }
 }

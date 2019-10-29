@@ -14,12 +14,6 @@ public class Item implements Serializable {
         amount = 0;
     }
 
- /*   public Item(String name, int price, int amount) {
-        this.name = name;
-        this.price = price;
-        inStock = amount;
-    }*/
-
     public String getName() {
         return name;
     }
@@ -32,12 +26,8 @@ public class Item implements Serializable {
         return amount;
     }
 
-    public void addStock(int increase){
-        amount += increase;
-    }
-
-    public void removeStock(int decrease){
-        amount -= decrease;
+    public void changeStock(int change){
+        amount += change;
     }
 
     public String toString() {

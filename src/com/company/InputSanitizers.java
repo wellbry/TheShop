@@ -1,7 +1,7 @@
 package com.company;
 
 /**
- * A class that handles user inputs in a way that doesn't crash the program
+ * A class that handles user inputs. Ensures that inputs meet specific requirements and doesn't crash if they don't
  * @author Magnus Wellbring
  */
 public class InputSanitizers {
@@ -11,7 +11,7 @@ public class InputSanitizers {
      * @param str The string to check
      * @return True if the input String is a number
      */
-    public boolean isNumber(String str) {
+    public static boolean isNumber(String str) {
         try {
             Integer.parseInt(str);
             return true;
@@ -20,12 +20,21 @@ public class InputSanitizers {
         }
     }
 
+    public static int convertToInt(String str) {
+        try {
+            int number = Integer.parseInt(str);
+            return number;
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
     /**
      * Converts the input String to int if possible
      * @param str Input String
      * @return The int if the string can be parsed to int, returns -1 if not
      */
-    public static int convertToInt(String str) {
+    public static int convertToIntPositive(String str) {
         try {
             int number = Integer.parseInt(str);
             return number;
