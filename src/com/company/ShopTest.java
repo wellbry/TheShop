@@ -10,6 +10,7 @@ class ShopTest {
     void changePassword() {
         String input = "bla\nblabla";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        View.getInstance().resetScanner();
         Shop shop = new Shop();
 
         shop.setLoggedInCustomer(new Customer("bla", "bla", "bla"));
@@ -21,6 +22,7 @@ class ShopTest {
     void createCustomerAccount() {
         String input = "Magnus\ncustomer\npassword\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        View.getInstance().resetScanner();
         Shop shop = new Shop();
         shop.createCustomerAccount();
         assertEquals(2,shop.getUsers().size());
@@ -30,6 +32,7 @@ class ShopTest {
     void createEmployeeAccount() {
         String input = "Magnus\nadmin2\npassword\n1\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        View.getInstance().resetScanner();
         Shop shop = new Shop();
 
         shop.createEmployeeAccount();
@@ -40,6 +43,7 @@ class ShopTest {
     void deleteAccount() {
         String input = "admin";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        View.getInstance().resetScanner();
         Shop shop = new Shop();
 
         assertEquals(1, shop.getUsers().size());
@@ -52,6 +56,7 @@ class ShopTest {
     void addInventoryItem() {
         String input = "testItem\n5\ntestItem2\n10\n";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        View.getInstance().resetScanner();
         Shop shop = new Shop();
 
         shop.addInventoryItem();
@@ -64,6 +69,7 @@ class ShopTest {
     void changeStockOfItem() {
         String input = "testItem\n5\ntestItem\n7\ntestItem\n-5\ntestItem\n-9";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        View.getInstance().resetScanner();
         Shop shop = new Shop();
 
         shop.addInventoryItem();
@@ -81,6 +87,7 @@ class ShopTest {
     void addItemToCart() {
         String input = "testItem\n5\ntestItem\n7\ntestItem\n5\ntestItem\n-1\ntestItem\n-10";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        View.getInstance().resetScanner();
         Shop shop = new Shop();
 
         shop.addInventoryItem();
@@ -101,6 +108,7 @@ class ShopTest {
     void checkOut() {
         String input = "200\ntestItem\n5\ntestItem\n7\ntestItem2\n2\ntestItem2\n7\ntestItem\n5\ntestItem2\n5";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        View.getInstance().resetScanner();
         Shop shop = new Shop();
 
         shop.setLoggedInCustomer(new Customer("bla", "bla", "bla"));
@@ -123,6 +131,7 @@ class ShopTest {
     void depositMoneyToCustomer() {
         String input = "100\n-50";
         System.setIn(new ByteArrayInputStream(input.getBytes()));
+        View.getInstance().resetScanner();
         Shop shop = new Shop();
 
         shop.setLoggedInCustomer(new Customer("bla", "bla", "bla"));

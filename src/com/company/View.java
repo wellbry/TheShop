@@ -22,6 +22,11 @@ public class View {
         return instance;
     }
 
+    public void resetScanner(){
+        scanner.close();
+        scanner = new Scanner(System.in);
+    }
+
     public String readString() {
         String string = scanner.nextLine();
         return string;
