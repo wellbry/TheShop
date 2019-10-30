@@ -47,7 +47,7 @@ public class View {
     }
 
     public <T extends HasDescription> T showMenuAndGetChoice(T[] menuItems) {
-        System.out.println("Make a choice.");
+        System.out.println("\nMake a choice.");
         for (int i = 0; i < menuItems.length; i++) {
             System.out.println((i + 1) + ". " + menuItems[i].getDescription());
         }

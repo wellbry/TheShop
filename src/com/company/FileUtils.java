@@ -5,20 +5,19 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.List;
 
 /**
  * Saves and loads objects from/to files
+ *
  * @author
  */
 public class FileUtils {
 
     /**
      * Saves an object to file
+     *
      * @param o
      * @param filename
      */
@@ -26,27 +25,30 @@ public class FileUtils {
         Path path = Paths.get(filename);
         try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(path))) {
             out.writeObject(o);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
      * Loads an object from a file
+     *
      * @param filename
      * @return
      */
-    public static Object loadObject(String filename){  //typeCasta objektet vid load
+    public static Object loadObject(String filename) {  //typeCasta objektet vid load
         Path path = Paths.get(filename);
-        try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(path))){
+        try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(path))) {
             return in.readObject();
-        }catch (Exception e){
+        } catch (NoSuchFileException e) {
+            System.out.println(String.format("%s not found", filename));
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-   // hgf(StandardOpenOption... option);  //för att skicka med fler options
+    // hgf(StandardOpenOption... option);  //för att skicka med fler options
 
     public static List<String> readAllLines(String fileName) {
         List<String> lines = null;

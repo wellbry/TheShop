@@ -13,10 +13,14 @@ public class Shop {
     private Employee loggedInEmployee;
     private User loggedInUser;
 
-    //TODO code comments + JavaDoc
+    //TODO code comments + JavaDoc + strategic line breaks (implemented in menu method, remove extraneous
 
     public Shop() {
         users.add(new Employee("Admin", "admin", "password", 1));
+        if (FileUtils.loadObject("Users.ser") != null) {
+            users = (ArrayList<User>) FileUtils.loadObject("Users.ser");
+        }
+        inventory = (ArrayList<Item>) FileUtils.loadObject("Inventory.ser");
     }
 
     public void loginMenu() {
@@ -31,6 +35,8 @@ public class Shop {
                     createCustomerAccount();
                     break;
                 case QUIT:
+                    FileUtils.saveObject(users, "Users.ser");
+                    FileUtils.saveObject(inventory, "Inventory.ser");
                     System.exit(0);
                 default:
                     view.printErrorMessage("Choose a valid alternative");
@@ -65,7 +71,7 @@ public class Shop {
                     checkOut();
                     break;
                 case SHOW_BALANCE:
-                    view.printLine("Your balance is " + loggedInCustomer.getBalance());
+                    view.printLine(String.format("Your balance is: %d" + loggedInCustomer.getBalance()));
                     break;
                 case DEPOSIT_CASH:
                     depositMoneyToCustomer();
@@ -77,6 +83,9 @@ public class Shop {
                     loggedInCustomer = null;
                     loggedInUser = null;
                     loginMenu();
+                    break;
+                default:
+                    view.printErrorMessage("Choose a valid alternative");
                     break;
             }
         }
@@ -145,7 +154,8 @@ public class Shop {
                     employeeMenu();
                     break;
                 default:
-                    view.printErrorMessage("Invalid alternative");
+                    view.printErrorMessage("Choose a valid alternative");
+                    break;
             }
         }
     }
@@ -183,7 +193,8 @@ public class Shop {
                     employeeMenu();
                     break;
                 default:
-                    view.printErrorMessage("Invalid choice");
+                    view.printErrorMessage("Choose a valid alternative");
+                    break;
             }
         }
     }
@@ -452,7 +463,8 @@ public class Shop {
                 view.printErrorMessage("Amount in cart can't exceed amount in stock.");
             } else if (existsInCart) {
                 if ((amount + amountInCart) < 0) { //if amount of item in cart would be less than 0, set it to 0
-                    loggedInCustomer.changeAmountInCart(indexOfFound, -amountInCart);
+                    //loggedInCustomer.changeAmountInCart(indexOfFound, -amountInCart);
+                    loggedInCustomer.getShoppingCart().remove(indexOfFound);
                 } else {
                     loggedInCustomer.changeAmountInCart(indexOfFound, amount);
                 }
@@ -474,13 +486,15 @@ public class Shop {
         if (sumOfCart > loggedInCustomer.getBalance()) {
             view.printErrorMessage("Cost of cart exceeds balance");
         } else {
-            for (Item item : loggedInCustomer.getShoppingCart()) { // for each item in cart iterates through the stock and removes that amount from stock
+            for (Item item : loggedInCustomer.getShoppingCart()) { // for each item in cart iterates through the inventory and removes that amount from stock
                 for (int i = 0; i < inventory.size(); i++) {
                     if (item.getName().equals(inventory.get(i).getName())) {
                         inventory.get(i).changeStock(0 - item.getAmount());
                     }
                 }
             }
+            view.printLine("Purchase:");
+            view.printList(loggedInCustomer.getShoppingCart());
             loggedInCustomer.emptyShoppingCart();
             loggedInCustomer.pay(sumOfCart);
             view.printLine(String.format("Checkout successful. Current balance: %d\n", loggedInCustomer.getBalance()));
@@ -494,7 +508,7 @@ public class Shop {
             view.printErrorMessage("Deposit must be a positive number");
         } else {
             int balance = loggedInCustomer.depositMoney(deposit);
-            view.printLine("Deposit successful. Current balance: " + balance);
+            view.printLine(String.format("Deposit successful. Current balance: %d\n", balance));
         }
     }
 
@@ -506,16 +520,16 @@ public class Shop {
         return users;
     }
 
+    Customer getLoggedInCustomer() { //only for test methods access
+        return loggedInCustomer;
+    }
+
     void setLoggedInCustomer(Customer customer) { //only for test methods access
         loggedInCustomer = customer;
         loggedInUser = customer;
     }
 
-    Customer getLoggedInCustomer() { //only for test methods access
-        return loggedInCustomer;
-    }
-
-    User getLoggedInUser(){
+    User getLoggedInUser() {
         return loggedInUser;
     }
 
@@ -555,7 +569,7 @@ public class Shop {
         }
 
         inventory.add(new Item("McGuffin", 100));
-        inventory.get( inventory.size() -1).changeStock(1);
+        inventory.get(inventory.size() - 1).changeStock(1);
     }
 
 }
