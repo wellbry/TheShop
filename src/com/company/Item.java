@@ -26,29 +26,29 @@ public class Item implements Serializable {
         return amount;
     }
 
-    public void changeStock(int change){
+    public void changeStock(int change) {
         amount += change;
     }
 
     public String toString() {
         return String.format("%20s %6d:- %5d pieces", name, price, amount);
     }
-
-    static class SortAlphabetically implements Comparator<Item> {
-        public int compare(Item a, Item b) {
-            return a.name.compareTo(b.name);
-        }
-    }
-
-    static class SortByPrice implements Comparator<Item> {
-        public int compare(Item a, Item b) {
-            return a.price - b.price;
-        }
-    }
-
-    static class SortByStock implements Comparator<Item> {
-        public int compare(Item a, Item b) {
-            return a.amount - b.amount;
-        }
-    }
 }
+
+    class SortItemsAlphabetically implements Comparator<Item> {
+        public int compare(Item a, Item b) {
+            return a.getName().compareTo(b.getName());
+        }
+    }
+
+    class SortItemsByPrice implements Comparator<Item> {
+        public int compare(Item a, Item b) {
+            return a.getPrice() - b.getPrice();
+        }
+    }
+
+    class SortItemsByStock implements Comparator<Item> {
+        public int compare(Item a, Item b) {
+            return a.getAmount() - b.getAmount();
+        }
+    }

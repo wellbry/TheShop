@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author Magnus Wellbring
  */
 public class Customer extends User {
-    private int balance;
+    private int balance = 0;
     private ArrayList<Item> shoppingCart = new ArrayList<>();
 
     /**
@@ -18,7 +18,6 @@ public class Customer extends User {
      */
     public Customer(String name, String login, String password) {
         super(name, login, password, UserType.CUSTOMER);
-        balance = 0;
     }
 
     /**
@@ -30,7 +29,7 @@ public class Customer extends User {
     }
 
     /**
-     * Subtracts the sent in int from the Customers balance and returns the balance after it's been subtracted
+     * Subtracts cost from the Customers balance
      * @param cost The amount subtracted from this Customers current balance
      * @return The balance of this customer after the cost has been subtracted
      */
@@ -50,30 +49,22 @@ public class Customer extends User {
     }
 
     /**
-     * Adds a new item to the Customer's shopping cart or increases the amount of the specific item if it's already present int the shopping cart
+     * Adds a new item to the Customer's shopping cart
      * @param itemName Name of the Item
-     * @param itemPrice Price of the item, used to create new Item if the Item is not present in the shopping cart
+     * @param itemPrice Price of the item
      * @param amount Amount of the Item
      */
     public void addItemToCart(String itemName, int itemPrice, int amount) {
-        int indexOfItem = -1;
-        boolean itemFound = false;
-        for (int i = 0; i<shoppingCart.size(); i++){
-            if (itemName.equalsIgnoreCase(shoppingCart.get(i).getName())){
-                indexOfItem = i;
-                itemFound = true;
-            }
-        }
-        if (itemFound) {
-            shoppingCart.get(indexOfItem).changeStock(amount);
-        } else {
             Item item = new Item(itemName, itemPrice);
             shoppingCart.add(item);
             shoppingCart.get(shoppingCart.lastIndexOf(item)).changeStock(amount);
-        }
     }
 
-
+    /**
+     * Changes the amount of an Item in the Customer's shoppingCart
+     * @param index Where in the shoppingCart the item is
+     * @param change The amount to change by
+     */
     public void changeAmountInCart(int index, int change){
         shoppingCart.get(index).changeStock(change);
     }

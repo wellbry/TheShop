@@ -20,6 +20,11 @@ public class InputSanitizers {
         }
     }
 
+    /**
+     * Attempts to convert str to an int, primarily used with isNumber where negative ints are acceptable
+     * @param str The String to attempt to convert
+     * @return An int
+     */
     public static int convertToInt(String str) {
         try {
             int number = Integer.parseInt(str);
@@ -48,7 +53,7 @@ public class InputSanitizers {
      * @param s The String to check
      * @return True if the input String only contains alphabetic characters
      */
-    public static boolean isAlphabet(String s){
+    public static boolean isAlphabetic(String s){
         return s != null && s.chars().allMatch(Character::isAlphabetic);
     }
 }

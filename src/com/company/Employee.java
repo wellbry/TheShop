@@ -19,14 +19,18 @@ public class Employee extends User {
         this.salary = salary;
     }
 
-    public int getSalary() {
-        return salary;
-    }
-
+    /**
+     * Set's the Employee's salary
+     * @param salary The int to set the Employee's salary to
+     */
     public void setSalary(int salary) {
         this.salary = salary;
     }
 
+    /**
+     * Returns a String representation of the Employee
+     * @return A String representation of the Employee
+     */
     @Override
     public String toString() {
         return super.toString() + String.format("%10d SEK/month", salary);

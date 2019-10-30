@@ -67,14 +67,14 @@ public class View {
     /**
      * The available options in the log in menu
      */
-    public enum LoginMenuItem implements HasDescription {
+    public enum LogInMenuItem implements HasDescription {
         LOGIN("Log in"),
         CREATE_CUSTOMER_ACCOUNT("Create new account"),
         QUIT("Quit");
 
         private String description;
 
-        LoginMenuItem(String description) {
+        LogInMenuItem(String description) {
             this.description = description;
         }
 
@@ -95,10 +95,9 @@ public class View {
         EMPTY_CART("Empty shopping cart"),
         CHECK_OUT("Check out shopping cart"),
         SHOW_BALANCE("Display account balance"),
-        DEPOSIT_CASH("Deposit money"),
+        DEPOSIT_MONEY("Deposit money"),
         CHANGE_PASSWORD("Change password"),
         LOGOUT("Log out");
-        //TODO add money, check out, change password
 
         public String description;
 

@@ -10,23 +10,27 @@ import java.io.Serializable;
 public abstract class User implements Comparable<User>, Serializable {
     private UserType userType;
     private String name;
-    private String login;
+    private String logIn;
     private String password;
 
     /**
      * Constructor
      *
      * @param name     User name
-     * @param login    User login name
+     * @param logIn    User login name
      * @param password User password
      */
-    public User(String name, String login, String password, UserType userType) {
+    public User(String name, String logIn, String password, UserType userType) {
         this.name = name;
-        this.login = login;
+        this.logIn = logIn;
         this.password = password;
         this.userType = userType;
     }
 
+    /**
+     * Get's the User's name
+     * @return the User's name
+     */
     public String getName() {
         return name;
     }
@@ -35,8 +39,8 @@ public abstract class User implements Comparable<User>, Serializable {
      * Returns this User's login name
      * @return The user's login name
      */
-    public String getLogin() {
-        return login;
+    public String getLogIn() {
+        return logIn;
     }
 
     /**
@@ -52,7 +56,7 @@ public abstract class User implements Comparable<User>, Serializable {
     }
 
     /**
-     * Sets User password to the sent string
+     * Sets User password to newPass
      *
      * @param newPass Password to change to
      */
@@ -62,18 +66,14 @@ public abstract class User implements Comparable<User>, Serializable {
 
     /**
      * Tells you what subclass of User this user is
-     *
      * @return The userType
      */
     public UserType getUserType() {
         return userType;
     }
 
-
-//should sort by login?
     /**
      * This class' implementation of the Comparable interface, sorts Users alphabetically by name
-     *
      * @param compareUser
      * @return
      */
@@ -88,7 +88,7 @@ public abstract class User implements Comparable<User>, Serializable {
      */
     @Override
     public String toString() {
-        return String.format("%10s: %10s: %10s", userType, name, login);
+        return String.format("%10s: %10s: %10s", userType, name, logIn);
     }
 
     /**

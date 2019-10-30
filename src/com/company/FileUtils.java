@@ -1,16 +1,11 @@
 package com.company;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.util.List;
 
 /**
  * Saves and loads objects from/to files
- *
  * @author
  */
 public class FileUtils {
@@ -18,8 +13,8 @@ public class FileUtils {
     /**
      * Saves an object to file
      *
-     * @param o
-     * @param filename
+     * @param o Object to save
+     * @param filename Name of the file to save
      */
     public static void saveObject(Object o, String filename) {
         Path path = Paths.get(filename);
@@ -33,10 +28,10 @@ public class FileUtils {
     /**
      * Loads an object from a file
      *
-     * @param filename
-     * @return
+     * @param filename Name of the file to load
+     * @return The object read
      */
-    public static Object loadObject(String filename) {  //typeCasta objektet vid load
+    public static Object loadObject(String filename) {
         Path path = Paths.get(filename);
         try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(path))) {
             return in.readObject();
@@ -47,27 +42,4 @@ public class FileUtils {
         }
         return null;
     }
-
-    // hgf(StandardOpenOption... option);  //för att skicka med fler options
-
-    public static List<String> readAllLines(String fileName) {
-        List<String> lines = null;
-        try {
-            lines = Files.readAllLines(Paths.get(fileName));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return lines;
-    }
-
-    public static void writeAllLines(String saveFileName, List<String> lines) {
-
-        try {
-            Path path = Paths.get(saveFileName);
-            Files.write(path, lines, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }

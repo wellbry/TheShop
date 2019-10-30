@@ -6,27 +6,34 @@ import java.util.Random;
 
 public class Shop {
 
-    View view = View.getInstance();
+    private View view = View.getInstance();
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Item> inventory = new ArrayList<>();
-    private Customer loggedInCustomer; //possible typecasting in methods
-    private Employee loggedInEmployee;
+    private Customer loggedInCustomer;
     private User loggedInUser;
 
-    //TODO code comments + JavaDoc + strategic line breaks (implemented in menu method, remove extraneous
+    //TODO JavaDoc
 
     public Shop() {
         users.add(new Employee("Admin", "admin", "password", 1));
-        if (FileUtils.loadObject("Users.ser") != null) {
-            users = (ArrayList<User>) FileUtils.loadObject("Users.ser");
-        }
-        inventory = (ArrayList<Item>) FileUtils.loadObject("Inventory.ser");
+//        if (FileUtils.loadObject("Users.ser") != null) { // Can't have an empty users, there'd be no Employee to access the employee menu
+//            try {
+//                users = (ArrayList<User>) FileUtils.loadObject("Users.ser");
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        try {
+//            inventory = (ArrayList<Item>) FileUtils.loadObject("Inventory.ser");
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     public void loginMenu() {
-        View.LoginMenuItem menuChoice = null;
-        while (menuChoice != View.LoginMenuItem.QUIT) {
-            menuChoice = view.showMenuAndGetChoice(View.LoginMenuItem.values());
+        View.LogInMenuItem menuChoice = null;
+        while (menuChoice != View.LogInMenuItem.QUIT) {
+            menuChoice = view.showMenuAndGetChoice(View.LogInMenuItem.values());
             switch (menuChoice) {
                 case LOGIN:
                     logIn();
@@ -35,8 +42,8 @@ public class Shop {
                     createCustomerAccount();
                     break;
                 case QUIT:
-                    FileUtils.saveObject(users, "Users.ser");
-                    FileUtils.saveObject(inventory, "Inventory.ser");
+//                    FileUtils.saveObject(users, "Users.ser");
+//                    FileUtils.saveObject(inventory, "Inventory.ser");
                     System.exit(0);
                 default:
                     view.printErrorMessage("Choose a valid alternative");
@@ -51,11 +58,11 @@ public class Shop {
             menuChoice = view.showMenuAndGetChoice(View.CustomerMenuItem.values());
             switch (menuChoice) {
                 case ITEMS_BY_NAME:
-                    Collections.sort(inventory, new Item.SortAlphabetically());
+                    Collections.sort(inventory, new SortItemsAlphabetically());
                     view.printList(inventory);
                     break;
                 case ITEMS_BY_PRICE:
-                    Collections.sort(inventory, new Item.SortByPrice());
+                    Collections.sort(inventory, new SortItemsByPrice());
                     view.printList(inventory);
                     break;
                 case ADD_OR_REMOVE_ITEM_TO_CART:
@@ -73,7 +80,7 @@ public class Shop {
                 case SHOW_BALANCE:
                     view.printLine(String.format("Your balance is: %d" + loggedInCustomer.getBalance()));
                     break;
-                case DEPOSIT_CASH:
+                case DEPOSIT_MONEY:
                     depositMoneyToCustomer();
                     break;
                 case CHANGE_PASSWORD:
@@ -106,7 +113,6 @@ public class Shop {
                     changePassword();
                     break;
                 case LOGOUT:
-                    loggedInEmployee = null;
                     loggedInUser = null;
                     loginMenu();
                     break;
@@ -172,22 +178,22 @@ public class Shop {
                     changeStockOfItem();
                     break;
                 case VIEW_ITEMS_BY_NAME:
-                    Collections.sort(inventory, new Item.SortAlphabetically());
+                    Collections.sort(inventory, new SortItemsAlphabetically());
                     view.printList(inventory);
                     break;
                 case VIEW_ITEMS_BY_PRICE:
-                    Collections.sort(inventory, new Item.SortByPrice());
+                    Collections.sort(inventory, new SortItemsByPrice());
                     view.printList(inventory);
                     break;
                 case VIEW_ITEMS_BY_STOCK:
-                    Collections.sort(inventory, new Item.SortByStock());
+                    Collections.sort(inventory, new SortItemsByStock());
                     view.printList(inventory);
                     break;
                 case WRITE_ITEMS_TO_FILE:
-                    writeInventoryToFile();
+                    FileUtils.saveObject(inventory, "Inventory.ser");
                     break;
                 case READ_ITEMS_FROM_FILE:
-                    readInventoryFromFile();
+                    inventory = (ArrayList<Item>) FileUtils.loadObject("Inventory.ser");
                     break;
                 case RETURN:
                     employeeMenu();
@@ -204,8 +210,8 @@ public class Shop {
         boolean userFound = false;
         int indexOfFoundUser = -1;
         String login = view.readString();
-        for (int i = 0; i < users.size(); i++) {
-            if (login.equals(users.get(i).getLogin())) {
+        for (int i = 0; i < users.size(); i++) { //Looks through users to see if there's a match for the entered logIn
+            if (login.equals(users.get(i).getLogIn())) {
                 userFound = true;
                 indexOfFoundUser = i;
             }
@@ -217,13 +223,12 @@ public class Shop {
         view.printLine("Enter password");
         String password = view.readString();
         if (users.get(indexOfFoundUser).isCorrectPassword(password)
-                && users.get(indexOfFoundUser).getUserType().equals(User.UserType.CUSTOMER)) {
+                && users.get(indexOfFoundUser).getUserType().equals(User.UserType.CUSTOMER)) { //The found User was a customer and the entered password was correct
             loggedInCustomer = (Customer) users.get(indexOfFoundUser);
             loggedInUser = users.get(indexOfFoundUser);
             customerMenu();
         } else if (users.get(indexOfFoundUser).isCorrectPassword(password)
-                && users.get(indexOfFoundUser).getUserType().equals(User.UserType.EMPLOYEE)) {
-            loggedInEmployee = (Employee) users.get(indexOfFoundUser);
+                && users.get(indexOfFoundUser).getUserType().equals(User.UserType.EMPLOYEE)) { //The found User was an Employee and the entered password was correct
             loggedInUser = users.get(indexOfFoundUser);
             employeeMenu();
         } else {
@@ -245,22 +250,22 @@ public class Shop {
 
     void createCustomerAccount() {
         String login;
-        boolean isName;
+        boolean nameIsAlphabetic;
         String name;
         do {
             view.printLine("Enter name");
             name = view.readString();
-            isName = InputSanitizers.isAlphabet(name);
-            if (!isName) {
+            nameIsAlphabetic = InputSanitizers.isAlphabetic(name);
+            if (!nameIsAlphabetic) {
                 view.printErrorMessage("Name may only contain letters. Please try again");
             }
-        } while (!isName);
+        } while (!nameIsAlphabetic);
         view.printLine("Enter login");
         boolean loginTaken = false;
         do {
             login = view.readString();
-            for (User user : users) {
-                if (login.equals(user.getLogin())) {
+            for (User user : users) { //Search through users to ensure there are no duplicate logIns
+                if (login.equals(user.getLogIn())) {
                     loginTaken = true;
                     view.printLine("Login taken, please try again");
                 }
@@ -278,8 +283,8 @@ public class Shop {
         boolean employeeFound = false;
         int indexOfFound = -1;
         int newSalary = 0;
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(1).getName().equals(employeeEntered) && users.get(1).getUserType() == User.UserType.EMPLOYEE) {
+        for (int i = 0; i < users.size(); i++) { //Search through users for entered login
+            if (users.get(i).getName().equals(employeeEntered) && users.get(i).getUserType() == User.UserType.EMPLOYEE) { //Entered User has been found and is an Employee
                 employeeFound = true;
                 indexOfFound = i;
             }
@@ -292,8 +297,10 @@ public class Shop {
                 temp.setSalary(newSalary);
                 users.set(indexOfFound, temp);
             } else {
-                view.printErrorMessage("Salary can't be negative");
+                view.printErrorMessage("Salary must be a positive number");
             }
+        } else {
+            view.printErrorMessage("Employee not found");
         }
     }
 
@@ -306,7 +313,7 @@ public class Shop {
         do {
             login = view.readString();
             for (User user : users) {
-                if (login.equals(user.getLogin())) {
+                if (login.equals(user.getLogIn())) {
                     loginTaken = true;
                     view.printErrorMessage("Login taken, please try again");
                 }
@@ -331,8 +338,8 @@ public class Shop {
         String userToRemoveLogin = view.readString();
         boolean userFound = false;
         int indexOfFound = -1;
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getLogin().equalsIgnoreCase(userToRemoveLogin)) {
+        for (int i = 0; i < users.size(); i++) { //Search through users for the entered logIn
+            if (users.get(i).getLogIn().equalsIgnoreCase(userToRemoveLogin)) {
                 userFound = true;
                 indexOfFound = i;
             }
@@ -351,15 +358,19 @@ public class Shop {
 
     void addInventoryItem() {
         view.printLine("Enter name of product");
-        String name = view.readString();
+        String itemName = view.readString();
+        for (Item item:inventory){ // Search through inventory to ensure no duplicate product names
+            if (item.getName().equalsIgnoreCase(itemName)){
+                view.printErrorMessage("Product with this name already exists");
+                return;
+            }
+        }
         view.printLine("Enter price");
-
         int price = InputSanitizers.convertToIntPositive(view.readString());
-
         if (price <= 0) {
             view.printErrorMessage("Price must be a positive number");
         } else {
-            inventory.add(new Item(name, price));
+            inventory.add(new Item(itemName, price));
         }
     }
 
@@ -368,7 +379,7 @@ public class Shop {
         String itemToIncrease = view.readString();
         boolean itemFound = false;
         int indexOfItemFound = -1;
-        for (int i = 0; i < inventory.size(); i++) {
+        for (int i = 0; i < inventory.size(); i++) { //Search through inventory for the entered item
             if (inventory.get(i).getName().equalsIgnoreCase(itemToIncrease)) {
                 itemFound = true;
                 indexOfItemFound = i;
@@ -379,7 +390,7 @@ public class Shop {
             String changeInput = view.readString();
             if (InputSanitizers.isNumber(changeInput)) {
                 int change = InputSanitizers.convertToInt(changeInput);
-                if ((0 - change) > inventory.get(indexOfItemFound).getAmount()) {
+                if ((0 - change) > inventory.get(indexOfItemFound).getAmount()) { // If decrease would set stock to a negative number set it to 0
                     inventory.get(indexOfItemFound).changeStock(0 - inventory.get(indexOfItemFound).getAmount());
                     view.printLine("Stock set to 0");
                 } else {
@@ -393,18 +404,10 @@ public class Shop {
         }
     }
 
-    private void writeInventoryToFile() {
-        FileUtils.saveObject(inventory, "Inventory.ser");
-    }
-
-    private void readInventoryFromFile() {
-        inventory = (ArrayList<Item>) FileUtils.loadObject("Inventory.ser");
-    }
-
     private void printEmployees() {
         ArrayList<Employee> employees = new ArrayList<>();
         for (User user : users) {
-            if (user.getUserType().equals(User.UserType.EMPLOYEE)) {
+            if (user.getUserType().equals(User.UserType.EMPLOYEE)) { //Sorts through users for Employees
                 employees.add((Employee) user);
             }
         }
@@ -415,7 +418,7 @@ public class Shop {
     private void printCustomers() {
         ArrayList<Customer> customers = new ArrayList<>();
         for (User user : users) {
-            if (user.getUserType().equals(User.UserType.CUSTOMER)) {
+            if (user.getUserType().equals(User.UserType.CUSTOMER)) { //Sorts through users for Customers
                 customers.add((Customer) user);
             }
         }
@@ -433,7 +436,7 @@ public class Shop {
         boolean existsInCart = false;
         int indexOfFound = 0;
         ArrayList<Item> cart = loggedInCustomer.getShoppingCart();
-        for (int i = 0; i < cart.size(); i++) {
+        for (int i = 0; i < cart.size(); i++) { // Search through the customers cart to see if it already includes the entered item
             if (itemNameToSearchFor.equalsIgnoreCase(cart.get(i).getName())) {
                 existsInCart = true;
                 itemFound = true;
@@ -442,7 +445,7 @@ public class Shop {
             }
         }
         if (!existsInCart) {
-            for (int i = 0; i < inventory.size(); i++) {
+            for (int i = 0; i < inventory.size(); i++) { // If item is not in cart search through inventory to fetch details needed to add it to cart
                 if (itemNameToSearchFor.equalsIgnoreCase(inventory.get(i).getName())) {
                     itemName = inventory.get(i).getName();
                     itemPrice = inventory.get(i).getPrice();
@@ -457,18 +460,17 @@ public class Shop {
         }
         view.printLine("Enter amount");
         String amountString = view.readString();
-        if (InputSanitizers.isNumber(amountString)) { //error handling
+        if (InputSanitizers.isNumber(amountString)) { //Error handling
             int amount = InputSanitizers.convertToInt(amountString);
-            if ((amount + amountInCart) > inventory.get(indexOfFound).getAmount()) {
+            if ((amount + amountInCart) > inventory.get(indexOfFound).getAmount()) { //Ensures that the amount in the cart can't exceed the amount in stock
                 view.printErrorMessage("Amount in cart can't exceed amount in stock.");
             } else if (existsInCart) {
-                if ((amount + amountInCart) < 0) { //if amount of item in cart would be less than 0, set it to 0
-                    //loggedInCustomer.changeAmountInCart(indexOfFound, -amountInCart);
+                if ((amount + amountInCart) <= 0) { // If amount of item in cart would be 0 or less remove it from cart
                     loggedInCustomer.getShoppingCart().remove(indexOfFound);
-                } else {
+                } else { // Else increase or decrease by entered amount
                     loggedInCustomer.changeAmountInCart(indexOfFound, amount);
                 }
-            } else {
+            } else { // If item was not found in cart add it
                 loggedInCustomer.addItemToCart(itemName, itemPrice, amount);
             }
         } else {
@@ -478,7 +480,7 @@ public class Shop {
 
     void checkOut() {
         int sumOfCart = 0;
-        for (Item item : loggedInCustomer.getShoppingCart()) {
+        for (Item item : loggedInCustomer.getShoppingCart()) { // Sum up cost of all items in cart
             int price = item.getPrice();
             int amount = item.getAmount();
             sumOfCart += (price * amount);
@@ -501,7 +503,7 @@ public class Shop {
         }
     }
 
-    void depositMoneyToCustomer() { //TODO clean up
+    void depositMoneyToCustomer() {
         view.printLine("Enter amount");
         int deposit = InputSanitizers.convertToIntPositive(view.readString());
         if (deposit < 0) {
@@ -529,18 +531,10 @@ public class Shop {
         loggedInUser = customer;
     }
 
-    User getLoggedInUser() {
-        return loggedInUser;
-    }
-
-    void nukeInventory() {
-        inventory.clear();
-    }
-
     //TODO remove before final commit
     public void test() {
         users.add(new Customer("Ludvig", "customer", "password"));
-        users.add(new Customer("Örjan", "öjje", "password"));
+        users.add(new Customer("Urban", "urre", "password"));
         users.add(new Customer("Anders", "anders1234", "password"));
         users.add(new Employee("Alban", "admin2", "password", 1));
 
@@ -549,19 +543,19 @@ public class Shop {
         Random rand = new Random();
 
 
-        inventory.add(new Item("Widgets", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Doodads", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Thingamajigs", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Gizmos", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Thingamabobs", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Doohickey", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Gadgets", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Contraptions", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Whatchamacallits", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Whatnots", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Baubles", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Geegaws", 1 + rand.nextInt(15)));
-        inventory.add(new Item("Curios", 1 + rand.nextInt(15)));
+        inventory.add(new Item("Widgets", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Doodads", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Thingamajigs", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Gizmos", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Thingamabobs", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Doohickey", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Gadgets", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Contraptions", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Whatchamacallits", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Whatnots", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Baubles", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Geegaws", 3 + rand.nextInt(13)));
+        inventory.add(new Item("Curios", 3 + rand.nextInt(13)));
 
 
         for (Item item : inventory) {
