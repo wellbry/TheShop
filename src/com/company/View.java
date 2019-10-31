@@ -3,11 +3,7 @@ package com.company;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/**
- * The View class
- *
- * @author Magnus Wellbring
- */
+
 public class View {
     private static View instance = null;
     Scanner scanner = new Scanner(System.in);
@@ -22,7 +18,7 @@ public class View {
         return instance;
     }
 
-    public void resetScanner(){
+    public void resetScanner() {
         scanner.close();
         scanner = new Scanner(System.in);
     }
@@ -67,7 +63,7 @@ public class View {
     /**
      * The available options in the log in menu
      */
-    public enum LogInMenuItem implements HasDescription {
+    enum LogInMenuItem implements HasDescription {
         LOGIN("Log in"),
         CREATE_CUSTOMER_ACCOUNT("Create new account"),
         QUIT("Quit");
@@ -87,7 +83,7 @@ public class View {
     /**
      * The available options in the Customer menu
      */
-    public enum CustomerMenuItem implements HasDescription {
+    enum CustomerMenuItem implements HasDescription {
         ITEMS_BY_NAME("Show items by name"),
         ITEMS_BY_PRICE("Show items by price"),
         ADD_OR_REMOVE_ITEM_TO_CART("Add items to cart, or change amount of items in cart"),
@@ -114,7 +110,7 @@ public class View {
     /**
      * The available options in the Employee main menu
      */
-    public enum EmployeeMenuItem implements HasDescription {
+    enum EmployeeMenuItem implements HasDescription {
         HANDLE_ACCOUNTS("Handle user accounts"),
         HANDLE_INVENTORY("Handle inventory"),
         CHANGE_PASSWORD("Change password"),
@@ -135,7 +131,7 @@ public class View {
     /**
      * The available options in the Handle Accounts submenu
      */
-    public enum HandleAccountsMenuItem implements HasDescription { //TODO consolidate create methods?
+    enum HandleAccountsMenuItem implements HasDescription {
         ADD_EMPLOYEE("Add a new employee account"),
         PRINT_EMPLOYEE_ARRAY("Display employees"),
         SET_EMPLOYEE_SALARY("Set employee salary"),
@@ -163,7 +159,7 @@ public class View {
     /**
      * The available options in the Handle Inventory submenu
      */
-    public enum HandleInventoryMenuItem implements HasDescription {
+    enum HandleInventoryMenuItem implements HasDescription {
         ADD_ITEM("Add a new item for sale"),
         CHANGE_ITEM_STOCK("Increase or decrease item stock"),
         VIEW_ITEMS_BY_NAME("Display inventory in alphabetical order"),
@@ -184,6 +180,5 @@ public class View {
             return description;
         }
     }
-
 
 }

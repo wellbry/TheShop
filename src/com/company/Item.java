@@ -35,20 +35,20 @@ public class Item implements Serializable {
     }
 }
 
-    class SortItemsAlphabetically implements Comparator<Item> {
-        public int compare(Item a, Item b) {
-            return a.getName().compareTo(b.getName());
-        }
+class SortItemsAlphabetically implements Comparator<Item> {
+    public int compare(Item a, Item b) {
+        return a.getName().compareTo(b.getName());
     }
+}
 
-    class SortItemsByPrice implements Comparator<Item> {
-        public int compare(Item a, Item b) {
-            return a.getPrice() - b.getPrice();
-        }
+class SortItemsByPrice implements Comparator<Item> {
+    public int compare(Item a, Item b) {
+        return a.getPrice() - b.getPrice();
     }
+}
 
-    class SortItemsByStock implements Comparator<Item> {
-        public int compare(Item a, Item b) {
-            return a.getAmount() - b.getAmount();
-        }
+class SortItemsByStock implements Comparator<Item> {
+    public int compare(Item a, Item b) {
+        return a.getAmount() - b.getAmount();
     }
+}

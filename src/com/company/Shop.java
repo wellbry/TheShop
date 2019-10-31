@@ -2,7 +2,6 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public class Shop {
 
@@ -12,22 +11,20 @@ public class Shop {
     private Customer loggedInCustomer;
     private User loggedInUser;
 
-    //TODO JavaDoc
-
     public Shop() {
         users.add(new Employee("Admin", "admin", "password", 1));
-//        if (FileUtils.loadObject("Users.ser") != null) { // Can't have an empty users, there'd be no Employee to access the employee menu
-//            try {
-//                users = (ArrayList<User>) FileUtils.loadObject("Users.ser");
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        try {
-//            inventory = (ArrayList<Item>) FileUtils.loadObject("Inventory.ser");
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
+        if (FileUtils.loadObject("Users.ser") != null) { // Can't have an empty users, there'd be no Employee to access the employee menu
+            try {
+                users = (ArrayList<User>) FileUtils.loadObject("Users.ser");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            inventory = (ArrayList<Item>) FileUtils.loadObject("Inventory.ser");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void loginMenu() {
@@ -42,8 +39,8 @@ public class Shop {
                     createCustomerAccount();
                     break;
                 case QUIT:
-//                    FileUtils.saveObject(users, "Users.ser");
-//                    FileUtils.saveObject(inventory, "Inventory.ser");
+                    FileUtils.saveObject(users, "Users.ser");
+                    FileUtils.saveObject(inventory, "Inventory.ser");
                     System.exit(0);
                 default:
                     view.printErrorMessage("Choose a valid alternative");
@@ -150,7 +147,6 @@ public class Shop {
                     view.printList(users);
                     break;
                 case WRITE_USERS_TO_FILE:
-                    //TODO write methods for these or move their inventory respectives
                     FileUtils.saveObject(users, "Users.ser");
                     break;
                 case READ_USERS_FROM_FILE:
@@ -359,8 +355,8 @@ public class Shop {
     void addInventoryItem() {
         view.printLine("Enter name of product");
         String itemName = view.readString();
-        for (Item item:inventory){ // Search through inventory to ensure no duplicate product names
-            if (item.getName().equalsIgnoreCase(itemName)){
+        for (Item item : inventory) { // Search through inventory to ensure no duplicate product names
+            if (item.getName().equalsIgnoreCase(itemName)) {
                 view.printErrorMessage("Product with this name already exists");
                 return;
             }
@@ -458,7 +454,7 @@ public class Shop {
             view.printErrorMessage("Item not found");
             return;
         }
-        view.printLine("Enter amount");
+        view.printLine("Enter amount, negative amounts will decrease the amount in your cart. If the amount would be reduced to 0 the item will be removed from your cart");
         String amountString = view.readString();
         if (InputSanitizers.isNumber(amountString)) { //Error handling
             int amount = InputSanitizers.convertToInt(amountString);
@@ -529,41 +525,6 @@ public class Shop {
     void setLoggedInCustomer(Customer customer) { //only for test methods access
         loggedInCustomer = customer;
         loggedInUser = customer;
-    }
-
-    //TODO remove before final commit
-    public void test() {
-        users.add(new Customer("Ludvig", "customer", "password"));
-        users.add(new Customer("Urban", "urre", "password"));
-        users.add(new Customer("Anders", "anders1234", "password"));
-        users.add(new Employee("Alban", "admin2", "password", 1));
-
-        Collections.sort(users);
-
-        Random rand = new Random();
-
-
-        inventory.add(new Item("Widgets", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Doodads", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Thingamajigs", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Gizmos", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Thingamabobs", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Doohickey", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Gadgets", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Contraptions", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Whatchamacallits", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Whatnots", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Baubles", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Geegaws", 3 + rand.nextInt(13)));
-        inventory.add(new Item("Curios", 3 + rand.nextInt(13)));
-
-
-        for (Item item : inventory) {
-            item.changeStock(75 + rand.nextInt(75));
-        }
-
-        inventory.add(new Item("McGuffin", 100));
-        inventory.get(inventory.size() - 1).changeStock(1);
     }
 
 }

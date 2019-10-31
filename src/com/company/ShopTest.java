@@ -24,7 +24,7 @@ class ShopTest {
         System.setIn(new ByteArrayInputStream(input.getBytes()));
         View.getInstance().resetScanner();
 
-       int expected = shop.getUsers().size() + 1;
+        int expected = shop.getUsers().size() + 1;
         shop.createCustomerAccount();
         assertEquals(expected, shop.getUsers().size());
     }

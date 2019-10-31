@@ -5,7 +5,8 @@ import java.io.ObjectOutputStream;
 import java.nio.file.*;
 
 /**
- * Saves and loads objects from/to files
+ * Saves and loads objects to/from files
+ *
  * @author
  */
 public class FileUtils {
@@ -13,7 +14,7 @@ public class FileUtils {
     /**
      * Saves an object to file
      *
-     * @param o Object to save
+     * @param o        Object to save
      * @param filename Name of the file to save
      */
     public static void saveObject(Object o, String filename) {
@@ -35,8 +36,6 @@ public class FileUtils {
         Path path = Paths.get(filename);
         try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(path))) {
             return in.readObject();
-        } catch (NoSuchFileException e) {
-            System.out.println(String.format("%s not found", filename));
         } catch (Exception e) {
             e.printStackTrace();
         }

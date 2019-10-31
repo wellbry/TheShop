@@ -14,7 +14,7 @@ public abstract class User implements Comparable<User>, Serializable {
     private String password;
 
     /**
-     * Constructor
+     * Constructs a User
      *
      * @param name     User name
      * @param logIn    User login name
@@ -29,6 +29,7 @@ public abstract class User implements Comparable<User>, Serializable {
 
     /**
      * Get's the User's name
+     *
      * @return the User's name
      */
     public String getName() {
@@ -37,6 +38,7 @@ public abstract class User implements Comparable<User>, Serializable {
 
     /**
      * Returns this User's login name
+     *
      * @return The user's login name
      */
     public String getLogIn() {
@@ -66,6 +68,7 @@ public abstract class User implements Comparable<User>, Serializable {
 
     /**
      * Tells you what subclass of User this user is
+     *
      * @return The userType
      */
     public UserType getUserType() {
@@ -74,6 +77,7 @@ public abstract class User implements Comparable<User>, Serializable {
 
     /**
      * This class' implementation of the Comparable interface, sorts Users alphabetically by name
+     *
      * @param compareUser
      * @return
      */
@@ -84,6 +88,7 @@ public abstract class User implements Comparable<User>, Serializable {
 
     /**
      * Returns a string representation of the User
+     *
      * @return A string representation of the User
      */
     @Override

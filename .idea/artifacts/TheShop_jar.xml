@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="TheShop:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/TheShop_jar</output-path>
+    <output-path>$PROJECT_DIR$/TheShop_jar</output-path>
     <root id="archive" name="TheShop.jar">
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/resources/META-INF/MANIFEST.MF" />
